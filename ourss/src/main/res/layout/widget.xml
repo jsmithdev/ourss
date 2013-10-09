@@ -19,8 +19,8 @@
         android:id="@+id/feed_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/icon" />
+        android:src="@drawable/icon"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>
