@@ -60,6 +60,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -83,8 +84,9 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
+
+import java.util.Date;
 
 import co.nerdart.ourss.Constants;
 import co.nerdart.ourss.PrefUtils;
@@ -97,8 +99,8 @@ import co.nerdart.ourss.provider.FeedData.FeedColumns;
 import co.nerdart.ourss.provider.FeedData.TaskColumns;
 import co.nerdart.ourss.provider.FeedDataContentProvider;
 import co.nerdart.ourss.service.FetcherService;
-
-import java.util.Date;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class EntryActivity extends ProgressActivity {
 
@@ -611,14 +613,31 @@ public class EntryActivity extends ProgressActivity {
         });
     }
 
+    //TODO:Make sliding menu UI to rewind, forward, pause.
+    //TODO:Make possible to rewind, forward, pause.
+    //TODO:Add to audio player category in settings.
+    //TODO:Better way to sort feeds - Will be hashed out to more todo's.
+
     private void showEnclosure(Uri uri, String enclosure, int position1, int position2) {
+
+
         try {
-            startActivityForResult(new Intent(Intent.ACTION_VIEW).setDataAndType(uri, enclosure.substring(position1 + 3, position2)), 0);
+//use internal media player
+            MediaPlayer player = MediaPlayer.create(this, uri);
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+
+                }
+            });
+
+            //startActivityForResult(new Intent(Intent.ACTION_VIEW).setDataAndType(uri, enclosure.substring(position1 + 3, position2)), 0);
         } catch (Exception e) {
-            try {
+            try { // fallbackmode - let the browser handle this
                 startActivityForResult(new Intent(Intent.ACTION_VIEW, uri), 0); // fallbackmode - let the browser handle this
             } catch (Throwable t) {
-                Toast.makeText(EntryActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                Crouton.makeText(EntryActivity.this, t.getMessage(), Style.INFO);
             }
         }
     }
@@ -752,7 +771,7 @@ public class EntryActivity extends ProgressActivity {
                 ClipData clip = android.content.ClipData.newPlainText("Copied Text", link);
                 clipboard.setPrimaryClip(clip);
 
-                Toast.makeText(this, R.string.copied_clipboard, Toast.LENGTH_SHORT).show();
+                Crouton.makeText(this, R.string.copied_clipboard, Style.INFO);
                 break;
             }
             case R.id.menu_mark_as_unread:
@@ -879,7 +898,8 @@ public class EntryActivity extends ProgressActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(EntryActivity.this, R.string.network_error, Toast.LENGTH_LONG).show();
+                                Crouton.makeText(EntryActivity.this, R.string.network_error,
+                                        Style.INFO);
                             }
                         });
                     }
@@ -892,11 +912,13 @@ public class EntryActivity extends ProgressActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
                     final int position1 = enclosure.indexOf(Constants.ENCLOSURE_SEPARATOR);
                     final int position2 = enclosure.indexOf(Constants.ENCLOSURE_SEPARATOR, position1 + 3);
 
                     Uri uri = Uri.parse(enclosure.substring(0, position1));
                     showEnclosure(uri, enclosure, position1, position2);
+
                 }
             });
         }

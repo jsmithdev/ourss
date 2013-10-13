@@ -71,7 +71,11 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import co.nerdart.ourss.Constants;
 import co.nerdart.ourss.R;
@@ -85,11 +89,10 @@ import co.nerdart.ourss.provider.FeedDataContentProvider;
 import co.nerdart.ourss.service.FetcherService;
 import co.nerdart.ourss.view.DragNDropExpandableListView;
 import co.nerdart.ourss.view.DragNDropListener;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import android.widget.Toast;
 
 public class FeedsListFragment extends ListFragment {
 
@@ -341,7 +344,9 @@ public class FeedsListFragment extends ListFragment {
                                             getActivity().runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    Toast.makeText(getActivity(), R.string.error_feed_import, Toast.LENGTH_LONG).show();
+                                                    Crouton.makeText(getActivity(),
+                                                            R.string.error_feed_import,
+                                                            Style.INFO);
                                                 }
                                             });
                                         }
@@ -351,10 +356,10 @@ public class FeedsListFragment extends ListFragment {
                         });
                         builder.show();
                     } catch (Exception e) {
-                        Toast.makeText(getActivity(), R.string.error_feed_import, Toast.LENGTH_LONG).show();
+                        Crouton.makeText(getActivity(), R.string.error_feed_import, Style.INFO);
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.error_external_storage_not_available, Toast.LENGTH_LONG).show();
+                    Crouton.makeText(getActivity(), R.string.error_external_storage_not_available, Style.INFO);
                 }
 
                 return true;
@@ -374,22 +379,33 @@ public class FeedsListFragment extends ListFragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getActivity(), String.format(getString(R.string.message_exported_to), filename),
-                                                Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(getActivity(),
+                                        //      String.format
+                                        //  (getString(R.string.message_exported_to),
+                                        //    filename),Toast.LENGTH_LONG).show();
+                                        Crouton.makeText(getActivity(), String.format(getString(R.string
+                                                .message_exported_to), filename), Style.INFO);
                                     }
                                 });
                             } catch (Exception e) {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getActivity(), R.string.error_feed_export, Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(getActivity(),
+                                        //      R.string.error_feed_export,
+                                        //    Toast.LENGTH_LONG).show();
+                                        Crouton.makeText(getActivity(), R.string.error_feed_export,
+                                                Style.INFO);
                                     }
                                 });
                             }
                         }
                     }).start();
                 } else {
-                    Toast.makeText(getActivity(), R.string.error_external_storage_not_available, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(), R.string.error_external_storage_not_available,
+                    //      Toast.LENGTH_LONG).show();
+                    Crouton.makeText(getActivity(), R.string.error_external_storage_not_available,
+                            Style.INFO);
                 }
                 break;
             }
@@ -443,7 +459,8 @@ public class FeedsListFragment extends ListFragment {
                                 new Intent(getActivity(), FetcherService.class).setAction(Constants.ACTION_REFRESH_FEEDS).putExtra(Constants.FEED_ID,
                                         Long.toString(feedId)));
                     } else {
-                        Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_LONG).show();
+
+                        Crouton.makeText(getActivity(), R.string.network_error, Style.INFO);
                     }
 
                     mode.finish(); // Action picked, so close the CAB

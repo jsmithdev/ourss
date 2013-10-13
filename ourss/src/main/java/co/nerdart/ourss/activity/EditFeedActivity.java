@@ -1,7 +1,9 @@
 /**
- * FeedEx
+ * OURSS was forked from FeedEx, which used Sparse RSS.
  *
- * Copyright (c) 2012-2013 Frederic Julian
+ *
+ *
+ *     --> FeedEx --> Copyright (c) 2012-2013 Frederic Julian
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -74,17 +76,6 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
-
-import co.nerdart.ourss.Constants;
-import co.nerdart.ourss.NetworkUtils;
-import co.nerdart.ourss.R;
-import co.nerdart.ourss.UiUtils;
-import co.nerdart.ourss.adapter.FiltersCursorAdapter;
-import co.nerdart.ourss.provider.FeedData.FeedColumns;
-import co.nerdart.ourss.provider.FeedData.FilterColumns;
-
-
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -94,6 +85,17 @@ import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import co.nerdart.ourss.Constants;
+import co.nerdart.ourss.NetworkUtils;
+import co.nerdart.ourss.R;
+import co.nerdart.ourss.UiUtils;
+import co.nerdart.ourss.adapter.FiltersCursorAdapter;
+import co.nerdart.ourss.provider.FeedData.FeedColumns;
+import co.nerdart.ourss.provider.FeedData.FilterColumns;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
 
 public class EditFeedActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -170,7 +172,7 @@ public class EditFeedActivity extends ListActivity implements LoaderManager.Load
                     cursor.close();
                 } else {
                     cursor.close();
-                    Toast.makeText(EditFeedActivity.this, R.string.error, Toast.LENGTH_LONG).show();
+                    Crouton.makeText(EditFeedActivity.this, R.string.error, Style.INFO);
                     finish();
                 }
             }
@@ -188,7 +190,10 @@ public class EditFeedActivity extends ListActivity implements LoaderManager.Load
 
             if (cursor.moveToFirst() && !getIntent().getData().getLastPathSegment().equals(cursor.getString(0))) {
                 cursor.close();
-                Toast.makeText(EditFeedActivity.this, R.string.error_feed_url_exists, Toast.LENGTH_LONG).show();
+                //Toast.makeText(EditFeedActivity.this, R.string.error_feed_url_exists,
+                //      Toast.LENGTH_LONG).show();
+                Crouton.makeText(EditFeedActivity.this, R.string.error_feed_url_exists,
+                        Style.INFO);
             } else {
                 cursor.close();
                 ContentValues values = new ContentValues();
@@ -304,7 +309,8 @@ public class EditFeedActivity extends ListActivity implements LoaderManager.Load
 
         if (cursor.moveToFirst()) {
             cursor.close();
-            Toast.makeText(EditFeedActivity.this, R.string.error_feed_url_exists, Toast.LENGTH_LONG).show();
+            Crouton.makeText(EditFeedActivity.this, R.string.error_feed_url_exists,
+                    Style.INFO);
         } else {
             cursor.close();
             ContentValues values = new ContentValues();
@@ -480,9 +486,11 @@ public class EditFeedActivity extends ListActivity implements LoaderManager.Load
                                             pd.cancel();
 
                                             if (data == null) {
-                                                Toast.makeText(EditFeedActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                                                Crouton.makeText(EditFeedActivity.this,
+                                                        R.string.error, Style.INFO);
                                             } else if (data.isEmpty()) {
-                                                Toast.makeText(EditFeedActivity.this, R.string.no_result, Toast.LENGTH_SHORT).show();
+                                                Crouton.makeText(EditFeedActivity.this,
+                                                        R.string.no_result, Style.INFO);
                                             } else {
                                                 AlertDialog.Builder builder = new AlertDialog.Builder(EditFeedActivity.this);
                                                 builder.setTitle(R.string.feed_search);

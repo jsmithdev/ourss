@@ -122,14 +122,14 @@
     <string name="transparency">Transparency</string>
 
     <!-- SETTINGS -->
-    <string name="settings_category_refresh">Automated refresh</string>
+    <string name="settings_category_refresh">Refresh Options</string>
     <string name="settings_refresh_enabled">Enable automatic refresh</string>
     <string name="settings_refresh_enabled_description">Enable the automatic refresh of feeds
     </string>
     <string name="settings_refresh_interval">Refresh interval</string>
     <string name="settings_refresh_interval_description">Interval between two automated refreshes
     </string>
-    <string name="settings_category_notifications">Notifications</string>
+    <string name="settings_category_notifications">Notification Options</string>
     <string name="settings_notifications_enabled">Enable notifications</string>
     <string name="settings_notifications_enabled_description">Enable notifications in case of new
         entries
@@ -141,7 +141,7 @@
     <string name="settings_notifications_vibrate">Vibrate</string>
     <string name="settings_notifications_vibrate_description">Enable the vibration on new entries
     </string>
-    <string name="settings_category_content_presentation">Content presentation</string>
+    <string name="settings_category_content_presentation">Visual Options</string>
     <string name="settings_lighttheme">Light theme</string>
     <string name="settings_lighttheme_description">Use the light theme</string>
     <string name="settings_keep_time">Time that the entries will be kept</string>
@@ -171,7 +171,8 @@
     </string>
     <string name="all_feeds">All feeds (incl. future)</string>
     <string name="settings_screen_proxy">Proxy</string>
-    <string name="settings_category_network">Network</string>
+    <string name="settings_category_network">Network Options</string>
+    <string name="settings_category_audio_player">Audio Player Options</string>
     <string name="settings_proxy_enabled">Enabled</string>
     <string name="settings_proxy_wifi_only">Wifi only</string>
     <string name="settings_proxy_wifi_only_description">Use Proxy only for wifi</string>
