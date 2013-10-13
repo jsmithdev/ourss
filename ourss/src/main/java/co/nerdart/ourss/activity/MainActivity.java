@@ -40,10 +40,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.lang.reflect.Method;
+import java.util.Locale;
+import java.util.Random;
+
 import co.nerdart.ourss.Constants;
 import co.nerdart.ourss.MainApplication;
 import co.nerdart.ourss.PrefUtils;
-import co.nerdart.ourss.R;
 import co.nerdart.ourss.UiUtils;
 import co.nerdart.ourss.fragment.EntriesListFragment;
 import co.nerdart.ourss.fragment.FeedsListFragment;
@@ -51,9 +54,9 @@ import co.nerdart.ourss.provider.FeedData.EntryColumns;
 import co.nerdart.ourss.service.FetcherService;
 import co.nerdart.ourss.service.RefreshService;
 
-import java.lang.reflect.Method;
-import java.util.Locale;
-import java.util.Random;
+import static co.nerdart.ourss.R.id;
+import static co.nerdart.ourss.R.layout.activity_main;
+import static co.nerdart.ourss.R.string;
 
 public class MainActivity extends ProgressFragmentActivity implements ActionBar.TabListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -66,6 +69,7 @@ public class MainActivity extends ProgressFragmentActivity implements ActionBar.
 
     static NotificationManager mNotificationManager = (NotificationManager) MainApplication.getAppContext().getSystemService(
             Context.NOTIFICATION_SERVICE);
+
 
     private final BroadcastReceiver mRefreshReceiver = new BroadcastReceiver() {
         @Override
@@ -88,7 +92,7 @@ public class MainActivity extends ProgressFragmentActivity implements ActionBar.
         UiUtils.setPreferenceTheme(this);
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(activity_main);
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
@@ -112,7 +116,7 @@ public class MainActivity extends ProgressFragmentActivity implements ActionBar.
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = (ViewPager) findViewById(id.pager);
         mViewPager.setAdapter(sectionsPagerAdapter);
 
         // When swiping between different sections, select the corresponding
@@ -176,7 +180,7 @@ public class MainActivity extends ProgressFragmentActivity implements ActionBar.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // HACK to get the good fragment...
-        getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + getActionBar().getSelectedNavigationIndex())
+        getSupportFragmentManager().findFragmentByTag("android:switcher:" + id.pager + ":" + getActionBar().getSelectedNavigationIndex())
                 .onCreateOptionsMenu(menu, getMenuInflater());
         return super.onCreateOptionsMenu(menu);
     }
@@ -184,7 +188,7 @@ public class MainActivity extends ProgressFragmentActivity implements ActionBar.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // HACK to get the good fragment...
-        getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + getActionBar().getSelectedNavigationIndex())
+        getSupportFragmentManager().findFragmentByTag("android:switcher:" + id.pager + ":" + getActionBar().getSelectedNavigationIndex())
                 .onOptionsItemSelected(item);
         return true;
     }
@@ -248,6 +252,9 @@ public class MainActivity extends ProgressFragmentActivity implements ActionBar.
                     args.putBoolean(EntriesListFragment.ARG_SHOW_FEED_INFO, true);
                     fragment.setArguments(args);
                     break;
+                case 3:
+                    fragment = new Fragment();
+                    break;
 
                 default:
                     break;
@@ -258,20 +265,24 @@ public class MainActivity extends ProgressFragmentActivity implements ActionBar.
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 4 total pages.
+            return 4;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return MainApplication.getAppContext().getString(R.string.overview).toUpperCase(Locale.getDefault());
+                    return MainApplication.getAppContext().getString(string.overview).toUpperCase(Locale.getDefault());
                 case 1: {
-                    return MainApplication.getAppContext().getString(R.string.all).toUpperCase(Locale.getDefault());
+                    return MainApplication.getAppContext().getString(string.all).toUpperCase(Locale.getDefault());
                 }
                 case 2:
-                    return MainApplication.getAppContext().getString(R.string.favorites).toUpperCase(Locale.getDefault());
+                    return MainApplication.getAppContext().getString(string.favorites).toUpperCase(Locale.getDefault());
+
+                case 3:
+                    return MainApplication.getAppContext().getString(string.audio).toUpperCase
+                            (Locale.getDefault());
             }
             return null;
         }
@@ -290,9 +301,9 @@ public class MainActivity extends ProgressFragmentActivity implements ActionBar.
         if (data.moveToFirst()) {
             int nbUnread = data.getInt(0);
             if (nbUnread > 0)
-                getActionBar().getTabAt(1).setText(getString(R.string.all).toUpperCase(Locale.getDefault()) + " (" + data.getInt(0) + ')');
+                getActionBar().getTabAt(1).setText(getString(string.all).toUpperCase(Locale.getDefault()) + " (" + data.getInt(0) + ')');
             else
-                getActionBar().getTabAt(1).setText(getString(R.string.all).toUpperCase(Locale.getDefault()));
+                getActionBar().getTabAt(1).setText(getString(string.all).toUpperCase(Locale.getDefault()));
         }
     }
 
