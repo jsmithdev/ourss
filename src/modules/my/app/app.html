@@ -1,0 +1,74 @@
+<template>
+
+    <template if:true={isLoading}>
+        <div class="load-container">
+            <ui-loading></ui-loading>
+        </div>
+    </template>
+
+    <ui-auth
+        onloggedin={loggedIn}
+    ></ui-auth>
+
+    <!-- <ui-slide-panel
+        open={showSettings}
+        position="right"
+        transition-duration="1000"
+    >
+        <span slot="content">
+            meow
+        </span>
+    </ui-slide-panel> -->
+
+    <div class="app">
+
+        <!-- <header class="header">
+            <ui-header
+                message={message}
+            ></ui-header>
+        </header> -->
+
+        <main>
+            <section class="swipe-view">
+                <section>
+                    <ui-casts
+                        casts={casts}
+                        onselect={showDetail}
+                    ></ui-casts>
+        
+                    <br/><br/><br/><br/>
+                    <br/><br/><br/><br/>
+                </section>
+                <template if:true={hasDetails}>
+                    <section ><!-- style="background-color: rgb(5, 250, 208);" -->
+                        <ui-cast
+                            cast={selected}
+                            onselect={setCurrent}
+                            onrefresh={refresh}
+                            ondelete={remove}
+                        ></ui-cast>
+                    </section>
+                </template>
+                <section>
+                    <ui-settings
+                        user={user}
+                        onsignin={signIn}
+                        onadd={addCast}
+                    ></ui-settings>
+                </section>
+            </section>
+
+            <footer>
+                <ui-player
+                    current={current}
+                    onradio={radio}
+                    onmessage={messenger}
+                    onsettings={settings}
+                    onplaylist={playlist}
+                ></ui-player>
+            </footer>
+        </main>
+        
+    </div>
+
+</template>

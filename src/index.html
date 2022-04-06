@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Ourrss</title>
+        <style>
+            :root {
+
+                --color-primary: #0288d1;
+                --color-secondary: #f608f0;
+                --color-accent: #05fad0;
+                --color-dark: #170232;
+                --color-light: #eeeeee;
+                --color-fourth: #F54D00;
+                --color-fifth: #21004A;
+            }
+            html {
+                margin: 0;
+            }
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                height: 100vh;
+                background-color: rgb(238, 238, 238);
+            }
+			body::-webkit-scrollbar {
+				width: 1em;
+			}
+
+			body::-webkit-scrollbar-track {
+				background: #555;
+				box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+				-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+			}
+
+			body::-webkit-scrollbar-thumb {
+				background-color: #b3e5fc;
+				outline: 1px solid #555;
+			}
+        </style>
+        <!-- Block zoom -->
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
+        <link rel="shortcut icon" href="./resources/icons/favicon.ico" />
+
+        <!-- Add manifest for add to home screen -->
+        <link rel="manifest" href="./manifest.json" />
+
+        <!-- Branding -->
+        <meta name="theme-color" content="#2196f3" />
+
+        <!-- Icons -->
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="./resources/icons/icon-16x16.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="./resources/icons/icon-32x32.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="./resources/icons/icon-192x192.png"
+        />
+
+        <!-- Add to home screen for Safari on iOS -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta name="apple-mobile-web-app-title" content="Ourrss" />
+        <link
+            rel="apple-touch-icon"
+            href="./resources/icons/icon-152x152.png"
+        />
+        <link rel="apple-touch-startup-image" href="./resources/icons/icon-180x180.png" />
+
+    </head>
+    <body>
+        <noscript>
+            <div class="unsupported">
+                <div class="unsupported_title">LWC app can't be loaded!</div>
+                <div class="unsupported_message">
+                    This application requires javascript to work properly.
+                </div>
+            </div>
+        </noscript>
+
+        <div id="outdated" style="display: none">
+            <div class="unsupported">
+                <div class="unsupported_title">App can't be loaded!</div>
+                <div class="unsupported_message"></div>
+            </div>
+        </div>
+
+        <script nomodule>
+            const { outdated } = window;
+            outdated.style.display = 'unset';
+            outdated.querySelector('.unsupported_message').textContent =
+                'This application requires a more recent version of your browser';
+        </script>
+
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js');
+                });
+            }
+        </script>
+
+        <div id="main"></div>
+    </body>
+</html>

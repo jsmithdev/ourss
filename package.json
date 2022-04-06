@@ -1,0 +1,27 @@
+{
+  "name": "ourss",
+  "version": "0.0.1",
+  "description": "Swank podcast app",
+  "main": "index.js",
+  "author": "Jamie Smith",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "copy-webpack-plugin": "^10.2.4",
+    "fast-xml-parser": "^4.0.7",
+    "firebase": "^9.6.10",
+    "html-webpack-plugin": "^5.5.0",
+    "lwc": "^2.11.3",
+    "lwc-webpack-plugin": "^3.0.0",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4",
+    "workbox-webpack-plugin": "^6.5.2"
+  },
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack serve",
+    "start": "webpack ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
