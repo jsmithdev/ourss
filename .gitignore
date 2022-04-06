@@ -4,4 +4,3 @@ node_modules
 
 # scratch directory
 scratch
-src/modules/ui/listen/listen.js
