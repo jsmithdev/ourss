@@ -2,7 +2,7 @@ import { api, track, LightningElement } from 'lwc';
 
 export default class Header extends LightningElement {
 
-    is = 'ourrss-header'
+    is = 'ourss-header'
     
     @track _message = 'Welcome to OurRSS!'
 

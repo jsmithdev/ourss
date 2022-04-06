@@ -1,10 +1,10 @@
 {
-    "name": "Ourrss",
-    "id": "ourrss",
+    "name": "Ourss",
+    "id": "ourss",
     "theme_color": "#0288d1",
     "background_color": "#0288d1",
     "display": "standalone",
-    "short_name": "Ourrss",
+    "short_name": "Ourss",
     "Scope": "/",
     "start_url": "/",
     "icons": [

@@ -1,6 +1,6 @@
 import { openDB } from 'idb';
 
-const DB_NAME = 'ourrss'
+const DB_NAME = 'ourss'
 const VERSION = 1
 
 
