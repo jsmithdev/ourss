@@ -19,9 +19,9 @@
     "workbox-webpack-plugin": "^6.5.2"
   },
   "scripts": {
-    "build": "webpack",
-    "dev": "webpack serve",
-    "start": "webpack ",
+    "start": "webpack serve",
+    "build": "webpack --mode=production --env production",
+    "build:dev": "webpack  --mode=development --env development",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

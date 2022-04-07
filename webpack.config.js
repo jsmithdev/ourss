@@ -5,66 +5,73 @@ const path = require('path');
 
 const LwcWebpackPlugin = require('lwc-webpack-plugin');
 const { DefinePlugin, HotModuleReplacementPlugin } = require('webpack');
-//const { InjectManifest } = require('workbox-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 const watch = process.env.NODE_ENV === 'production' ? false : true;
 
-console.log('env: ', process.env.NODE_ENV);
-console.log('mode: ', mode);
-
 const { version } = require('./package.json');
 
-console.log(version)
+console.log(`Ourss Version: ${version}`);
 
 
-module.exports = {
+module.exports = (env) => {
 
-    mode,
+	const mode = env.production ? 'production' : 'development'
+	console.log('Webpack build mode: ', mode);
 
-    entry: {
-        'app': './src/index.js',
-        'service-worker': "./src/service-worker.js",
-    },
+	const config = {
 
-    output: {
-        path: path.join(__dirname, 'dist'),
-        filename: '[name].js'
-    },
+		mode,
 
-    devServer: {
-    },
+		entry: {
+			'app': './src/index.js',
+		},
 
-    plugins: [
-        new LwcWebpackPlugin(),
-        /* new InjectManifest({
-            maximumFileSizeToCacheInBytes: 5000000,
-            swSrc: '/src/service-worker.js',
-            swDest: 'sw.js'
-        }), */
-        new DefinePlugin({
-            __VERSION__: JSON.stringify(version)
-        }),
-        new HtmlWebpackPlugin({ template: './src/index.html' }),
-        new CopyPlugin({
-            patterns: [
-              {
-                from: path.resolve(__dirname, "./src/resources"),
-                to: path.resolve(__dirname, "./dist/resources"),
-              },
-              {
-                from: path.resolve(__dirname, "./src/service-worker.js"),
-                to: path.resolve(__dirname, "./dist/sw.js"),
-              },
-              {
-                from: path.resolve(__dirname, "./src/manifest.json"),
-                to: path.resolve(__dirname, "./dist/manifest.json"),
-              },
-            ],
-        }),
-    ],
+		output: {
+			path: path.join(__dirname, 'dist'),
+			filename: '[name].js'
+		},
+
+		devServer: {
+		},
+
+		plugins: [
+			new LwcWebpackPlugin(),
+			new HtmlWebpackPlugin({ template: './src/index.html' }),
+			new DefinePlugin({
+				__VERSION__: JSON.stringify(version)
+			}),
+			new InjectManifest({
+				swSrc: '/src/service-worker.js',
+				swDest: 'sw.js'
+			}),
+			new CopyPlugin({
+				patterns: [
+					{
+						from: path.resolve(__dirname, "./src/resources"),
+						to: path.resolve(__dirname, "./dist/resources"),
+					},
+					{
+						from: path.resolve(__dirname, "./src/manifest.json"),
+						to: path.resolve(__dirname, "./dist/manifest.json"),
+					},
+				],
+			}),
+		],
+	}
+	
+	// https://github.com/GoogleChrome/workbox/issues/1790
+	if (env.production) {
+		/* config.plugins.push( new InjectManifest({
+			swSrc: '/src/service-worker.js',
+			swDest: 'sw.js'
+		})); */
+	}
+
+	return config;
 };
 
 
@@ -76,3 +83,9 @@ module.exports = {
 //	swSrc: path.join(__dirname, 'service-worker.js'),
 //	swDest: path.join(__dirname, '..', 'dist', 'sw.js'),
 //}),
+/* 
+{
+	from: path.resolve(__dirname, "./src/service-worker.js"),
+	to: path.resolve(__dirname, "./dist/sw.js"),
+},
+*/
