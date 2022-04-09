@@ -1,12 +1,14 @@
 {
-    "name": "Ourss",
     "id": "ourss",
+    "name": "Ourss",
+    "short_name": "Ourss",
+    "description": "Swank podcast PWA 💅",
     "theme_color": "#0288d1",
     "background_color": "#0288d1",
     "display": "standalone",
-    "short_name": "Ourss",
     "Scope": "/",
     "start_url": "/",
+    "splash_pages": null,
     "icons": [
         {
             "src": "resources/icons/maskable_icon_x48.png",
@@ -99,6 +101,5 @@
             "type": "image/png",
             "purpose": "any"
         }
-    ],
-    "splash_pages": null
+    ]
 }

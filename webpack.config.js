@@ -14,13 +14,15 @@ const watch = process.env.NODE_ENV === 'production' ? false : true;
 
 const { version } = require('./package.json');
 
-console.log(`Ourss Version: ${version}`);
+console.log(`🐶 Ourss Version: ${version}`);
 
 
 module.exports = (env) => {
 
 	const mode = env.production ? 'production' : 'development'
-	console.log('Webpack build mode: ', mode);
+	console.log(`🖥️  Build mode: ${mode}`);
+	console.log(`🎗️  Dedicated to Arron Swartz`);
+	console.log('');
 
 	const config = {
 
@@ -44,10 +46,10 @@ module.exports = (env) => {
 			new DefinePlugin({
 				__VERSION__: JSON.stringify(version)
 			}),
-			new InjectManifest({
-				swSrc: '/src/service-worker.js',
-				swDest: 'sw.js'
-			}),
+			//new InjectManifest({
+			//	swSrc: '/src/service-worker.js',
+			//	swDest: 'sw.js'
+			//}),
 			new CopyPlugin({
 				patterns: [
 					{
@@ -65,10 +67,10 @@ module.exports = (env) => {
 	
 	// https://github.com/GoogleChrome/workbox/issues/1790
 	if (env.production) {
-		/* config.plugins.push( new InjectManifest({
+		config.plugins.push( new InjectManifest({
 			swSrc: '/src/service-worker.js',
 			swDest: 'sw.js'
-		})); */
+		}));
 	}
 
 	return config;

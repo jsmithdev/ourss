@@ -42,7 +42,7 @@ export default class Cast extends LightningElement {
 
     selectItem(event) {
 
-        const { id } = event.target.dataset;
+        const { id } = event.currentTarget.dataset;
         
         if(this.prevSelected === id){
             console.log('Cast: toggling off ', id)
@@ -116,14 +116,14 @@ export default class Cast extends LightningElement {
 
         event.stopPropagation();
 
-        const { id } = event.target.dataset;
+        this.cast.fav = true;
 
         // todo pass only what's needed
         this.dispatchEvent(new CustomEvent('favorite', {
             bubbles: true,
             composed: true,
             detail: {
-                id,
+                cast: this.cast,
             },
         }));
     }

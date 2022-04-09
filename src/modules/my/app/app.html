@@ -30,7 +30,7 @@
 
         <main>
             <section class="swipe-view">
-                <section>
+                <section class="casts">
                     <ui-casts
                         casts={casts}
                         onselect={showDetail}
@@ -40,11 +40,12 @@
                     <br/><br/><br/><br/>
                 </section>
                 <template if:true={hasDetails}>
-                    <section ><!-- style="background-color: rgb(5, 250, 208);" -->
+                    <section class="deets"><!-- style="background-color: rgb(5, 250, 208);" -->
                         <ui-cast
                             cast={selected}
                             onselect={setCurrent}
                             onrefresh={refresh}
+                            onfavorite={favorite}
                             ondelete={remove}
                         ></ui-cast>
                     </section>

@@ -106,3 +106,13 @@ export async function addToFire(url, id) {
 
     return o;
 }
+
+
+export async function setRemoteDb(dbname, record) {
+
+    // move to firestore
+    const db = getFirestore(fire);
+    const ref = collection(db, dbname);
+    console.log('Fire: setting remote db ', record)
+    return setDoc(doc(ref), record);
+}

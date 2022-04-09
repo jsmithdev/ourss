@@ -3,60 +3,31 @@
 svg {
     width: 3rem;
     height: 3rem;
-    background: rgb(2, 136, 209, 0.2);
     border-radius: 50px;
     padding: 5px;
+    
+    position: relative;
+    display: inline-block;
 }
 svg.refresh {
     transition: all 0.5s ease-in-out;
 }
-path {
-    fill: rgb(254, 82, 140);
+svg.favorite {
+    right: 0;
+    bottom: 0;
+    position: absolute;
 }
-
-button {
-    background: #0288D1;
-    color: #B3E5FC;
-    border: none;
-    padding: 1rem;
-    font-size: 1rem;
-}
-
-ul {
-    transition: all 0.5s ease-in-out;
-    -webkit-padding-start: 0rem;
-    -webkit-margin-end: 0rem;
-    list-style-type: none;
-    display: none;
-    overflow: hide;
-}
-ul::-webkit-scrollbar {
-    width: 1em;
-}
-
-ul::-webkit-scrollbar-track {
-    background: #555;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-ul::-webkit-scrollbar-thumb {
-    background-color: #b3e5fc;
-    outline: 1px solid #555;
-}
-ul.refresh li {
-    background: #bae7fc;
-    color: #1b94d5;
-    font-size: 1.1rem;
+path.heart {
+    fill: var(--color-pink);
+    stroke: var(--color-dark);
 }
 
 .container {
     height: auto;
     /* margin-top: -5px; */
-    background-color: rgb(238 238 238);
+    /* background-color: rgb(238 238 238); */
     margin-bottom: 3rem;
 }
-
 
 .grid-box {
     display: flex;
@@ -65,40 +36,9 @@ ul.refresh li {
     flex-wrap: wrap;
     justify-content: space-evenly;
 }
-.center-container {
-    width: 100vw;
-    height: 80vh;
-    display: flex;
-    align-items: center;
-}
-
-.card:nth-child(n) {
-    margin: .5rem;
-}
-
-.enc {
-    transition: all 0.25s ease-in-out;
-    font-size: 1rem;
-    /* border: 1pt solid #afe0f6; */
-    vertical-align: middle;
-    color: slategrey;
-    padding: 1rem 0rem 1rem 0rem;
-    background-color: rgba(238, 238, 238);
-    text-align: center;
-}
-
-.enc:nth-child(even) {
-    background: rgba(175, 224, 246)
-}
-
-.enc:hover {
-    background: #bae7fc;
-    color: #1b94d5;
-    font-size: 1.1rem;
-}
 
 .card {
-
+    position: relative;
     width: 10rem;
     height: 10rem;
     background-color: #FFF;
@@ -110,97 +50,22 @@ ul.refresh li {
     cursor: pointer;
     border-radius: 5px;
 }
-
+.card:nth-child(n) {
+    margin: .5rem;
+}
 .card:hover {
     cursor: pointer;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.38);
 }
 
-.card-active {
-    transition: all .5s ease-in-out;
-    height: 100%;
-    width: 100%;
-    opacity: 1;
-}
-
-.card-body {
-    transition: all 0.1s ease-in-out;
-    text-align: center;
-    height: 100%;
-    width: auto;
-    display: none;
-}
-
-.card-active>.card-body {
-    text-align: center;
-    margin-top: 2.5rem;
-    height: 100%;
-    width: auto;
-    display: block;
-}
-.card.info {
-    width: 90vw;
-    max-width: 30rem;
-    padding: 1rem;
-    line-height: 2;
-    height: auto;
-    /* background-color: rgb(186, 231, 252); */
-    color: rgb(27, 148, 213);
-    font-size: 1.1rem;
-    background-size: 200%;
-    box-shadow: rgb(238, 238, 238) 0px 0px 20px;
-    color: white;
-    background-image: linear-gradient(to right, rgb(132, 250, 176) 0%, rgb(5, 250, 208) 51%, rgb(246, 8, 240) 100%);
-    background-position: right center;
-}
-
-.load-container {
-    z-index: 100;
-    margin: 0 auto;
-}
-
 .card-img {
+    display: block;
     user-select: none;
-    z-index: 100;
     transition: all 0.5s ease-in-out;
     width: 10rem;
     height: 10rem;
     border-radius: 5px;
 }
-
-.card-active .card-img {
-    position: relative;
-    z-index: 100;
-    border-radius: 50%;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.38);
-}
-
-
-
-.card-active ul {
-    display: block;
-    /* max-height: 85%; */
-    width: 75%;
-    overflow-x: auto;
-    margin: auto;
-}
-
-
-
-.actions {
-    position: absolute;
-    top: 4rem;
-    width: 100%;
-}
-.refresh {
-    float: right;
-}
-
-.card-icon {
-    width: 2rem;
-    height: 2rem;
-}
-
 
 .image-bg {
     text-align: center;
@@ -210,55 +75,3 @@ ul.refresh li {
         rgb(2, 136, 209) 90%
     );
 }
-
-.overlay {
-    /* position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.2); */
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 10;
-    /* background-color: rgba(0,0,0,0.5); */
-}
-
-.max-center {
-    max-width: 50rem;
-    margin: auto;
-}
-
-
-/* {
-    user-select: none;
-    width: 100%;
-    height: 100%;
-} */
-/* 
-.gridContainer {
-    width: 75%;
-    margin: 0 auto;
-    padding-bottom: 8rem;
-    height: 100%;
-}
- */
-/* @media (max-width: 450px) {
-    ::-webkit-scrollbar {
-        display: none;
-    }
-    ::-webkit-scrollbar-thumb {
-        display: none;
-    }
-    .grid-box {
-        display: grid;
-        grid-gap: 1rem;
-        padding: 1rem 1rem 6.5rem 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-} */

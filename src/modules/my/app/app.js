@@ -17,6 +17,7 @@ import {
 
 import {
     getRemoteDb,
+    setRemoteDb,
 } from '../../data/fire';
 
 
@@ -31,6 +32,7 @@ export default class App extends LightningElement {
     user = {}
     selected = {}
     hasDetails = false;
+    favorites = []
 
 	constructor() {
 		super();
@@ -57,7 +59,6 @@ export default class App extends LightningElement {
             this._init = true;
             this.onkeyup = this.hotkeys;
 
-
             const done = () => {
                 this.isLoading = false;
             }
@@ -66,7 +67,6 @@ export default class App extends LightningElement {
         }
     }
     
-
     view(str){
         if(str === 'casts'){
             this.dom.section.scrollTo(0, 0)
@@ -137,14 +137,40 @@ export default class App extends LightningElement {
         const cast = await updateCast(feed, id)
         console.log(JSON.parse(JSON.stringify({feed, id, updated: cast})))
 
-        this.casts = [
-            cast,
-            ...this.casts.filter(c => c.id !== id),
-        ];
+        this.updateSortCast(cast)
 
         console.log(JSON.parse(JSON.stringify({casts: this.casts})))
 
         if(detail.cb) detail.cb(cast);
+    }
+    async favorite({detail}){
+
+        const {cast} = detail;
+        console.log('App: favorite ', cast)
+
+        // update local db
+        deleteCast(cast.id)
+        setItem('casts', cast);
+
+        this.updateSortCast(cast)
+        
+        // add to favorites
+        this.favorites = [...this.favorites, cast.id]
+
+        const user = {
+            id: this.user.uid,
+            favorites: this.favorites,
+        }
+
+        if(!this.user.uid) return console.warn('no user');
+
+        // update remote db
+        const res = await setRemoteDb('users', user)
+
+        console.info('App: favorite results: ', res)
+        
+
+        if(detail.cb) detail.cb();
     }
 
     remove({detail}){
@@ -197,6 +223,8 @@ export default class App extends LightningElement {
      */
     loggedIn({detail}) {
 
+        console.log('App: user info ', detail.user)
+
         this.user = detail.user;
         // if haven't already, check remote db
         if(!this.remoteDbChecked){
@@ -243,7 +271,7 @@ export default class App extends LightningElement {
         else {
             console.log('App: had local casts')
             console.log(casts)
-            this.casts = casts;
+            this.updateSortCasts(casts)
         }
 
         if(!this.remoteDbChecked){
@@ -301,8 +329,41 @@ export default class App extends LightningElement {
             if(store){
                 setItem('casts', data)
             }
-            this.casts = [...this.casts, data]
+            
+            this.updateSortCast(data)
         }
+    }
+
+    updateSortCast(cast){
+    
+        const { id } = cast;
+        const faves = this.casts.filter(c => c.fav && c.id !== id)
+        const others = this.casts.filter(c => !c.fav && c.id !== id)
+
+        if(cast.fav){
+            this.casts = [
+                cast,
+                ...faves,
+                ...others,
+            ];
+        }
+        else {
+            this.casts = [
+                ...faves,
+                cast,
+                ...others,
+            ];
+        }
+    }
+    updateSortCasts(casts){
+
+        const faves = casts.filter(c => c.fav)
+        const others = casts.filter(c => !c.fav)
+
+        this.casts = [
+            ...faves,
+            ...others,
+        ];
     }
 
 
