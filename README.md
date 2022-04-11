@@ -4,6 +4,8 @@
 
 It's a work in progress
 
+Live @ <https://ourss.app>
+
 ### What's the porpoise? 🐬
 
 I wanted a fun open source progressive web app for podcasts
