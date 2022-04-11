@@ -1,10 +1,5 @@
 <template>
 
-    <template if:true={isLoading}>
-        <div class="load-container">
-            <ui-loading></ui-loading>
-        </div>
-    </template>
 
     <ui-auth
         onloggedin={loggedIn}
@@ -31,6 +26,12 @@
         <main>
             <section class="swipe-view">
                 <section class="casts">
+
+    <template if:true={isLoading}>
+        <div class="load-container">
+            <ui-loading></ui-loading>
+        </div>
+    </template>
                     <ui-casts
                         casts={casts}
                         onselect={showDetail}

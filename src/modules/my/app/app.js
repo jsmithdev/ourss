@@ -26,7 +26,7 @@ export default class App extends LightningElement {
     @track casts = []
     current = {}
     message = ''
-    isLoading = true
+    isLoading = false
     showAuth = false;
     showSettings = false;
     user = {}
@@ -58,12 +58,6 @@ export default class App extends LightningElement {
         if(!this._init){
             this._init = true;
             this.onkeyup = this.hotkeys;
-
-            const done = () => {
-                this.isLoading = false;
-            }
-
-            setTimeout(done, 1000)
         }
     }
     
@@ -273,6 +267,8 @@ export default class App extends LightningElement {
             console.log(casts)
             this.updateSortCasts(casts)
         }
+
+        this.isLoading = false;
 
         if(!this.remoteDbChecked){
             this.checkRemoteDb();
