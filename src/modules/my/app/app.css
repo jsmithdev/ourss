@@ -46,6 +46,8 @@ section.swipe-view {
     flex: 1;
     display:flex;
     -webkit-overflow-scrolling: touch;
+    /* background-image: linear-gradient(0.15turn, var(--color-accent) 0%, var(--color-secondary) 51%, var(--color-primary) 100%); */
+    background-image: radial-gradient(circle at left bottom, var(--color-accent) 0%, var(--color-primary) 57%, var(--color-secondary) 100%);
 }
 section.swipe-view > section {
   width: -webkit-fit-available;
@@ -53,13 +55,13 @@ section.swipe-view > section {
   flex:0 0 100vw;
   scroll-snap-align: start;
 }
-
+/* 
 section.casts {
     background-image: linear-gradient(0.25turn, rgb(132, 250, 176) 0%, rgb(5, 250, 208) 51%, rgb(246, 8, 240) 100%);
 }
 section.deets {
     background-image: linear-gradient(0.25turn, rgb(246, 8, 240) 0%, rgb(5, 250, 208) 51%, var(--color-primary) 100%);
-}
+} */
 
 
 .center {

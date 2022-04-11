@@ -104,7 +104,6 @@ div.description {
     overflow: auto;
     padding: 0.5rem 0.25rem;
     margin-top: 6px;
-    direction: rtl;
     background-image: linear-gradient(to bottom, #05fad000 0%, var(--color-primary) 100%);
 }
 div.description > span {
