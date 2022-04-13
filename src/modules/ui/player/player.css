@@ -7,9 +7,6 @@ path {
     fill : var(--color-accent);
 }
 
-path.gradient {
-    fill : url(#gradient);
-}
 .filtered {
     filter: drop-shadow(rgb(238 238 238) 0px 0px 1px);
 }
@@ -20,7 +17,11 @@ section {
     bottom: 0px;
     width: 100%;
     height: 6.3rem;
-    box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.2), 0px -4px 10px 0px rgba(0, 0, 0, 0.2);
+}
+@media (hover: none) and (pointer: coarse) {
+    section {
+        box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.2), 0px -4px 10px 0px rgba(0, 0, 0, 0.2);
+    }
 }
 
 section.expand {

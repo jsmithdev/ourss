@@ -66,12 +66,3 @@ path.heart {
     height: 10rem;
     border-radius: 5px;
 }
-
-.image-bg {
-    text-align: center;
-    background: linear-gradient( 0deg, 
-        rgb(238 238 238) 0%, 
-        rgb(254 82 140) 20%, 
-        rgb(2, 136, 209) 90%
-    );
-}

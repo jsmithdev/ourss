@@ -1,19 +1,6 @@
 <template>
 
-
-    <ui-auth
-        onloggedin={loggedIn}
-    ></ui-auth>
-
-    <!-- <ui-slide-panel
-        open={showSettings}
-        position="right"
-        transition-duration="1000"
-    >
-        <span slot="content">
-            meow
-        </span>
-    </ui-slide-panel> -->
+    
 
     <div class="app">
 
@@ -23,54 +10,52 @@
             ></ui-header>
         </header> -->
 
-        <main>
-            <section class="swipe-view">
-                <section class="casts">
+        <main class="swipe-view">
+            <section class="casts">
 
-    <template if:true={isLoading}>
-        <div class="load-container">
-            <ui-loading></ui-loading>
-        </div>
-    </template>
-                    <ui-casts
-                        casts={casts}
-                        onselect={showDetail}
-                    ></ui-casts>
-        
-                    <br/><br/><br/><br/>
-                    <br/><br/><br/><br/>
-                </section>
-                <template if:true={hasDetails}>
-                    <section class="deets"><!-- style="background-color: rgb(5, 250, 208);" -->
-                        <ui-cast
-                            cast={selected}
-                            onselect={setCurrent}
-                            onrefresh={refresh}
-                            onfavorite={favorite}
-                            ondelete={remove}
-                        ></ui-cast>
-                    </section>
+                <template if:true={isLoading}>
+                    <div class="load-container">
+                        <ui-loading></ui-loading>
+                    </div>
                 </template>
-                <section>
-                    <ui-settings
-                        user={user}
-                        onsignin={signIn}
-                        onadd={addCast}
-                    ></ui-settings>
-                </section>
-            </section>
 
-            <footer>
-                <ui-player
-                    current={current}
-                    onradio={radio}
-                    onmessage={messenger}
-                    onsettings={settings}
-                    onplaylist={playlist}
-                ></ui-player>
-            </footer>
+                <ui-casts
+                    casts={casts}
+                    onselect={showDetail}
+                ></ui-casts>
+            </section>
+            <template if:true={hasDetails}>
+                <section class="deets"><!-- style="background-color: rgb(5, 250, 208);" -->
+                    <ui-cast
+                        cast={selected}
+                        onselect={setCurrent}
+                        onrefresh={refresh}
+                        onfavorite={favorite}
+                        ondelete={remove}
+                    ></ui-cast>
+                </section>
+            </template>
+            <section>
+                <ui-settings
+                    user={user}
+                    onsignin={signIn}
+                    onadd={addCast}
+                ></ui-settings>
+            </section>
         </main>
-        
+
+        <footer>
+            <ui-player
+                current={current}
+                onradio={radio}
+                onmessage={messenger}
+                onsettings={settings}
+                onplaylist={playlist}
+            ></ui-player>
+        </footer>
     </div>
 
+    <ui-auth
+        onloggedin={loggedIn}
+    ></ui-auth>
 </template>

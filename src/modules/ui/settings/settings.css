@@ -4,9 +4,7 @@ h3 {
 .container {
     color: rgb(255, 255, 255);
     user-select: none;
-    /* background: rgb(2, 136, 209); */
-    width: 100vw;
-    height: 100vh;
+    height: 100%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
