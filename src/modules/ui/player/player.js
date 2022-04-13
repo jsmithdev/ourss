@@ -22,34 +22,25 @@ export default class Player extends LightningElement {
         }
     }
     
-    get showSettings() {
-        return this._settings || false;
-    }
-    set showSettings(value) {
-        this._settings = value;
-        this.dispatchEvent(new CustomEvent('settings', {
+    navigate(view, value) {
+        
+        this.dispatchEvent(new CustomEvent('navigate', {
             bubbles: true,
             composed: true,
-            detail: value,
+            detail: {
+                view,
+                value,
+            },
         }));
     }
     toggleSettings() {
         this.showSettings = !this.showSettings;
+        this.navigate('settings', this.showSettings)
     }
     
-    get showList() {
-        return this._pl || false;
-    }
-    set showList(value) {
-        this._pl = value;
-        this.dispatchEvent(new CustomEvent('playlist', {
-            bubbles: true,
-            composed: true,
-            detail: value,
-        }));
-    }
     toggleList() {
         this.showList = !this.showList;
+        this.navigate('details', this.showList)
     }
 
     get src() {
@@ -123,7 +114,7 @@ export default class Player extends LightningElement {
         this.Audio.addEventListener('play', () => {
             this.paused = false;
         });
-        if(this.autoplay){
+        if(options.autoplay){
             if(this.Audio.canplay){
                 this.Audio.play();
             }

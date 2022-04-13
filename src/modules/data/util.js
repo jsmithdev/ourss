@@ -23,18 +23,21 @@ export function hasBeenHour(time){
     return diff > HOUR;
 }
 
-export const defaults = [
-    'https://rss.art19.com/never-not-funny',
-    //'https://rss.art19.com/the-daily',
-    'https://brianposehnsnerdpoker.libsyn.com/rss',
-    //'https://feeds.feedburner.com/thebuglefeed',
-    //'https://www.omnycontent.com/d/playlist/885ace83-027a-47ad-ad67-aca7002f1df8/d07cfb12-42fa-4a5e-b579-aca8005d018b/011c9cdc-63a0-4eaa-b377-aca8005d019e/podcast.rss',
-    //'https://feeds.feedburner.com/dancarlin/history?format=xml',
-    //'https://thedollop.libsyn.com/rss',
-    //'https://lexfridman.com/feed/podcast',
-    //'https://feeds.simplecast.com/Ao0C24M8',
-    //'https://www.omnycontent.com/d/playlist/aaea4e69-af51-495e-afc9-a9760146922b/f7adbeff-8e96-4861-ab31-aa7a000e2532/62743333-5a2a-4fe0-81b8-aa7a000e253d/podcast.rss',
-]
+export const defaults = {
+    view: 'casts',
+    feeds: [
+        'https://rss.art19.com/never-not-funny',
+        //'https://rss.art19.com/the-daily',
+        'https://brianposehnsnerdpoker.libsyn.com/rss',
+        //'https://feeds.feedburner.com/thebuglefeed',
+        //'https://www.omnycontent.com/d/playlist/885ace83-027a-47ad-ad67-aca7002f1df8/d07cfb12-42fa-4a5e-b579-aca8005d018b/011c9cdc-63a0-4eaa-b377-aca8005d019e/podcast.rss',
+        //'https://feeds.feedburner.com/dancarlin/history?format=xml',
+        //'https://thedollop.libsyn.com/rss',
+        //'https://lexfridman.com/feed/podcast',
+        //'https://feeds.simplecast.com/Ao0C24M8',
+        //'https://www.omnycontent.com/d/playlist/aaea4e69-af51-495e-afc9-a9760146922b/f7adbeff-8e96-4861-ab31-aa7a000e2532/62743333-5a2a-4fe0-81b8-aa7a000e253d/podcast.rss',
+    ]
+}
 
 
 

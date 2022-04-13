@@ -28,10 +28,8 @@ export default class App extends LightningElement {
     message = ''
     isLoading = false
     showAuth = false;
-    showSettings = false;
     user = {}
     selected = {}
-    hasDetails = false;
     favorites = []
 
 	constructor() {
@@ -42,10 +40,14 @@ export default class App extends LightningElement {
             this.processed( event.data?.whoami || 'web worker', event ) );
 	}
 
+    get hasDetails(){
+        return Object.keys(this.selected).length
+    }
+
     get dom(){
         return {
             app: this.template.querySelector('.app'),
-            section: this.template.querySelector('section'),
+            main: this.template.querySelector('main'),
         }
     }
 
@@ -63,13 +65,28 @@ export default class App extends LightningElement {
     
     view(str){
         if(str === 'casts'){
-            this.dom.section.scrollTo(0, 0)
+            this.dom.main.scrollTo(0, 0)
         }
         else if(str === 'details'){
-            this.dom.section.scrollTo(this.dom.section.scrollWidth / 3, 0)
+            this.dom.main.scrollTo(this.dom.main.scrollWidth / 3, 0)
         }
-        else if(str === 'settings'){this.dom.section.scrollTo(this.dom.section.scrollWidth / 1, 0)
+        else if(str === 'settings'){
+            this.dom.main.scrollTo(this.dom.main.scrollWidth / 1, 0)
         }
+    }
+    navigate({detail}){
+        
+        const {view, value} = detail;
+
+        console.log('App: v/v ', view, value)
+
+        if(value){
+            this.view(view)
+        }
+        else {
+            this.view(this._view_prev)
+        }
+        this._view_prev = view || defaults.view;
     }
 
     setCurrent({detail}){
@@ -186,23 +203,6 @@ export default class App extends LightningElement {
         this.showAuth = true;
     }
 
-    settings({detail}){
-        if(detail){
-            this.view('settings')
-        }
-        else {
-            this.view('casts')
-        }
-    }
-
-    playlist({detail}){
-        if(detail){
-            this.view('details')
-        }
-        else {
-            this.view('casts')
-        }
-    }
 
     /**
      * used to run sign in process
@@ -232,13 +232,7 @@ export default class App extends LightningElement {
      */
     showDetail({detail}) {
         this.selected = detail;
-        if(!this.hasDetails){
-            this.hasDetails = true;
-            setTimeout(() => this.view('details'), 50)
-        }
-        else {
-            this.view('details')
-        }
+        setTimeout(() => this.view('details'), 0)
     }
 
     /**
@@ -250,7 +244,7 @@ export default class App extends LightningElement {
         const casts = await getItems('casts')
 
         if(!casts.length){
-            defaults.map(async url => {
+            defaults.feeds.map(async url => {
                 this.worker.postMessage({
                     url,
                     store: true,
