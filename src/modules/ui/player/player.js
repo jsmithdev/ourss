@@ -18,7 +18,7 @@ export default class Player extends LightningElement {
         const isNew = (this._current?.id !== item?.id);
         if(item?.id){
             this._current = item;
-            if(isNew) this.setNew();
+            if(isNew) this.play();
         }
     }
     
@@ -66,21 +66,14 @@ export default class Player extends LightningElement {
         }
     }
 
-    togglePlay() {
-
-        this.paused = !this.paused;
-
-        if(this.paused) {
-            console.log('Player: pausing')
-            this.pause();
+    setPositionState(){
+        try {
+            navigator.mediaSession.setPositionState({
+                duration: this.Audio.duration,
+                position: this.Audio.currentTime
+            });
         }
-        else {
-            
-            setTimeout(() => this.play()
-                .then(() => console.log('Player: playing'))
-                .catch(msg => this.loadPrevious(msg))
-            , 0);
-        }
+        catch(e){ console.warn(e) }
     }
 
     loadPrevious(message) {
@@ -122,14 +115,18 @@ export default class Player extends LightningElement {
                 this.Audio.addEventListener('canplay', () => this.Audio.play());
             }
         }
+
+        this.metadata()
     }
 
 
     play() {
         //return this.dom.audio.play();
+        this.metadata();
         return this.Audio.play();
     }
     pause() {
+        this.metadata();
         //return this.dom.audio.pause();
         return this.Audio.pause();
     }
@@ -194,15 +191,8 @@ export default class Player extends LightningElement {
         if(key === 'Space') this.togglePlay();
     }
 
-    setNew() { 
-
-        this.Audio.pause()
-
-        this.newAudio({
-            autoplay: true,
-        })
+    metadata() { 
         
-        //Mechanics
         //localStorage['audioTitle'] = String(this.title);
         localStorage.image = this.currentImage
         localStorage.currentTime = 0
@@ -213,37 +203,47 @@ export default class Player extends LightningElement {
 
 
         // todo need retest src error via mobile fix
-        if ('mediaSession' in navigator) {
-            // eslint-disable-next-line no-undef
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: this.title,
-                artist: this.name,
-                artwork: [{
-                    src: this.currentImage
-                }]
-            })
-            
-            const play = async () => {
-                await this.play()
-                navigator.mediaSession.playbackState = "playing";
-            }
-            const pause = async () => {
-                await this.pause()
-                navigator.mediaSession.playbackState = "paused";
-            }
+
+        console.log('Player: metadata ', {
+            title: this.title,
+            artist: this.name,
+            artwork: [{
+                src: this.currentImage
+            }]
+        })
 
 
-            navigator.mediaSession.setActionHandler('play', play)
-            navigator.mediaSession.setActionHandler('pause', pause);
-            navigator.mediaSession.setActionHandler('stop', pause);
-            navigator.mediaSession.setActionHandler('seekbackward', () => this.back());
-            navigator.mediaSession.setActionHandler('seekforward', () => this.forward());
-            navigator.mediaSession.setActionHandler('previoustrack', () => this.back());
-            navigator.mediaSession.setActionHandler('nexttrack', () => this.forward());
-  
-            //navigator.mediaSession.setActionHandler('seekto', function() { /* Code excerpted. */ });
-            //navigator.mediaSession.setActionHandler('skipad', function() { /* Code excerpted. */ });
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: this.title,
+            artist: this.name,
+            artwork: [{
+                src: this.currentImage
+            }]
+        })
+        
+        const play = () => {
+            this.play()
+            navigator.mediaSession.playbackState = "playing";
         }
+        const pause = () => {
+            this.pause()
+            navigator.mediaSession.playbackState = "paused";
+            this.set
+        }
+
+
+        navigator.mediaSession.setActionHandler('play', play)
+        navigator.mediaSession.setActionHandler('pause', pause);
+        navigator.mediaSession.setActionHandler('stop', pause);
+        navigator.mediaSession.setActionHandler('seekbackward', () => this.back());
+        navigator.mediaSession.setActionHandler('seekforward', () => this.forward());
+        navigator.mediaSession.setActionHandler('previoustrack', () => this.back());
+        navigator.mediaSession.setActionHandler('nexttrack', () => this.forward());
+
+        //navigator.mediaSession.setActionHandler('seekto', function() { /* Code excerpted. */ });
+        //navigator.mediaSession.setActionHandler('skipad', function() { /* Code excerpted. */ });
+
+        this.setPositionState()
     }
 
 
@@ -264,7 +264,9 @@ export default class Player extends LightningElement {
         const message =`${this.name}\n${this.title}`
         
         console.log('Player: playing ', message)
-        //this.sendMessage( message );
+
+        this.play()
+        this.setPositionState()
     }
     emptied() {
 

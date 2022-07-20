@@ -97,29 +97,32 @@ export default class App extends LightningElement {
         } = detail;
 
         const parent = this.casts.find(x => x.id === parentid)
+
+        //console.log('App: setCurrent: ', id, parentid, JSON.parse(JSON.stringify(parent)))
         
-        const item = parent
-            .items.find(x => x.id === id) 
+        const item = parent?.items.find(x => x.id === id) 
+
+        if(!item){ return console.log('App: no items') }
 
         this.current = Object.assign({
             name: parent.title,
             image: parent.image,
         }, item);
         
-        console.log(this.current)
+        //console.log(this.current)
     }
 
     async addCast({detail}){
         const {url, id} = detail;
-        console.log('addCast ', url)
+        //console.log('addCast ', url)
         this.casts = [...this.casts, (await addCast(url, id))]
-        console.log({
-            CastsNow: this.casts,
-        })
+        //console.log({
+        //    CastsNow: this.casts,
+        //})
     }
 
     hotkeys(event){
-        console.log('hotkeys ', event.key)
+        //console.log('hotkeys ', event.key)
         const {key} = event;
 
         if(key === 'Space') console.log('space');
@@ -142,15 +145,12 @@ export default class App extends LightningElement {
     }
 
     async refresh({detail}){
-        console.log('refresh ')
+
         const {feed, id} = detail;
 
         const cast = await updateCast(feed, id)
-        console.log(JSON.parse(JSON.stringify({feed, id, updated: cast})))
 
         this.updateSortCast(cast)
-
-        console.log(JSON.parse(JSON.stringify({casts: this.casts})))
 
         if(detail.cb) detail.cb(cast);
     }

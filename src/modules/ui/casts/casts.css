@@ -30,29 +30,32 @@ path.heart {
 }
 
 .grid-box {
-    display: flex;
-    place-items: center;
-    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-    flex-wrap: wrap;
+    display: grid;
+    gap: 5px;
+    margin: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(175px, 225px));
+    align-items: center;
+    place-content: center;
     justify-content: space-evenly;
+}
+@media only screen and (max-width: 600px) {
+    .grid-box {
+        grid-template-columns: repeat(auto-fit, minmax(175px, 175px));
+    }
 }
 
 .card {
     position: relative;
-    width: 10rem;
-    height: 10rem;
-    background-color: #FFF;
     color: #212121;
-    font-size: 150%;
     text-align: center;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
     cursor: pointer;
     border-radius: 5px;
 }
-.card:nth-child(n) {
+/* .card:nth-child(n) {
     margin: .5rem;
-}
+} */
 .card:hover {
     cursor: pointer;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.38);
@@ -62,7 +65,7 @@ path.heart {
     display: block;
     user-select: none;
     transition: all 0.5s ease-in-out;
-    width: 10rem;
-    height: 10rem;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
     border-radius: 5px;
 }

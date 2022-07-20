@@ -81,6 +81,8 @@ export default class Cast extends LightningElement {
 
         console.log('Cast: play ', id, ' of ', parentid)
 
+        if(!id || !parentid){ return undefined }
+
         this.dispatchEvent(new CustomEvent('select', {
             bubbles: true,
             composed: true,
@@ -97,7 +99,8 @@ export default class Cast extends LightningElement {
         this.isLoading = true;
 
         const cb = c => {
-            this.current = {...c};
+            console.log('CALLBACK ', c)
+            this.cast = c;
             this.isLoading = false
         }
 

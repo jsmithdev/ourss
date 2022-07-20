@@ -1,14 +1,6 @@
 # Ourss
 
-## Swank podcast pwa 💅
-
-It's a work in progress
-
-Live @ <https://ourss.app>
-
-### What's the porpoise? 🐬
-
-I wanted a fun open source progressive web app for podcasts
+Fun PWA for podcasts @ <https://ourss.app>
 
 ## Development 🖥️
 
@@ -26,7 +18,7 @@ To install dev dependencies:
 npm install
 ```
 
-To serve for development / watch / run local:
+To serve locally:
 
 ```bash
 npm start
