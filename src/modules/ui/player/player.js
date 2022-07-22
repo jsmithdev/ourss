@@ -15,10 +15,17 @@ export default class Player extends LightningElement {
         return this._current || {};
     }
     set current(item){
+        
+        console.log(JSON.parse(JSON.stringify(item)))
+        console.log(JSON.parse(JSON.stringify(this.current)))
         const isNew = (this._current?.id !== item?.id);
+        console.log('isNew ',isNew)
         if(item?.id){
             this._current = item;
-            if(isNew) this.play();
+            // autoplay if not loading prev sesh
+            if(isNew) this.newAudio({
+                autoplay: localStorage.src !== item.src,
+            });
         }
     }
     
@@ -107,6 +114,9 @@ export default class Player extends LightningElement {
         this.Audio.addEventListener('play', () => {
             this.paused = false;
         });
+        
+        this.metadata();
+
         if(options.autoplay){
             if(this.Audio.canplay){
                 this.Audio.play();
@@ -115,8 +125,6 @@ export default class Player extends LightningElement {
                 this.Audio.addEventListener('canplay', () => this.Audio.play());
             }
         }
-
-        this.metadata()
     }
 
 
@@ -228,7 +236,6 @@ export default class Player extends LightningElement {
         const pause = () => {
             this.pause()
             navigator.mediaSession.playbackState = "paused";
-            this.set
         }
 
 
@@ -298,6 +305,15 @@ export default class Player extends LightningElement {
                 callback: callback.bind(this),
             },
         }));
+    }
+
+    togglePlay(){
+        if(this.paused) {
+            this.play()
+        }
+        else {
+            this.pause()
+        }
     }
 
     auth() {
