@@ -1,0 +1,16 @@
+<template>
+    <div class="ourss-header">
+        
+        <div class="grid">
+            <div class="icon" onclick={reload}>
+                <img src="../../../resources/icons/maskable_icon_x192.png" />
+            </div>
+            <div class="text">
+                <template if:true={message}>
+                    <pre>{message}</pre>
+                </template>
+            </div>
+        </div>
+
+    </div>
+</template>

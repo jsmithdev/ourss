@@ -1,0 +1,60 @@
+<template>
+
+    
+
+    <div class="app">
+
+        <!-- <header class="header">
+            <ui-header
+                message={message}
+            ></ui-header>
+        </header> -->
+
+        <main class="swipe-view">
+            <section class="casts">
+
+                <template if:true={isLoading}>
+                    <div class="load-container">
+                        <ui-loading></ui-loading>
+                    </div>
+                </template>
+
+                <ui-casts
+                    casts={casts}
+                    onselect={showDetail}
+                ></ui-casts>
+            </section>
+            <template if:true={hasDetails}>
+                <section class="deets"><!-- style="background-color: rgb(5, 250, 208);" -->
+                    <ui-cast
+                        cast={selected}
+                        onselect={setCurrent}
+                        onrefresh={refresh}
+                        onfavorite={favorite}
+                        ondelete={remove}
+                    ></ui-cast>
+                </section>
+            </template>
+            <section>
+                <ui-settings
+                    user={user}
+                    onsignin={signIn}
+                    onadd={addCast}
+                ></ui-settings>
+            </section>
+        </main>
+
+        <footer>
+            <ui-player
+                current={current}
+                onradio={radio}
+                onmessage={messenger}
+                onnavigate={navigate}
+            ></ui-player>
+        </footer>
+    </div>
+
+    <ui-auth
+        onloggedin={loggedIn}
+    ></ui-auth>
+</template>

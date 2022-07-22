@@ -1,0 +1,39 @@
+
+img {
+    width: 8rem;
+    height: 8rem;
+    animation-name: spin;
+    animation-duration: 1000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    /* width: 4rem; */
+    /* height: 4rem; */
+    white-space: nowrap;
+    display: inline-flex;
+    cursor: pointer;
+    position: relative;
+    border: 1pt solid rgb(5, 250, 208);
+    appearance: none;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    z-index: 1;
+    outline: none;
+    flex: 1 1 auto;
+    text-transform: uppercase;
+    transition: all 0.5s ease 0s;
+    background-size: 200%;
+    box-shadow: rgb(238, 238, 238) 0px 0px 20px;
+    color: white;
+    background-image: linear-gradient(to right, rgb(132, 250, 176) 0%, rgb(5, 250, 208) 51%, rgb(246, 8, 240) 100%);
+    background-position: right center;
+    border-radius: 50%;
+}
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
