@@ -34,7 +34,6 @@ export default class App extends LightningElement {
 
 	constructor() {
 		super();
-        console.log()
 		this.worker = new Worker(new URL('./../../workers/data.js', import.meta.url));
 		this.worker.addEventListener( 'message', event => 
             this.processed( event.data?.whoami || 'web worker', event ) );
@@ -54,6 +53,7 @@ export default class App extends LightningElement {
 
     async connectedCallback () {
         this.startLoading();
+        this.test();
     }
 
     renderedCallback() {
@@ -98,7 +98,7 @@ export default class App extends LightningElement {
 
         const parent = this.casts.find(x => x.id === parentid)
 
-        //console.log('App: setCurrent: ', id, parentid, JSON.parse(JSON.stringify(parent)))
+        console.log('App: setCurrent: ', id, parentid, JSON.parse(JSON.stringify(parent)))
         
         const item = parent?.items.find(x => x.id === id) 
 
@@ -325,7 +325,7 @@ export default class App extends LightningElement {
     }
 
     updateSortCast(cast){
-    
+        console.log(cast)
         const { id } = cast;
         const faves = this.casts.filter(c => c.fav && c.id !== id)
         const others = this.casts.filter(c => !c.fav && c.id !== id)
@@ -345,6 +345,7 @@ export default class App extends LightningElement {
             ];
         }
     }
+
     updateSortCasts(casts){
 
         const faves = casts.filter(c => c.fav)
@@ -356,6 +357,59 @@ export default class App extends LightningElement {
         ];
     }
 
+    test(){
+        setTimeout(() => {
+            this.queue(new CustomEvent('queue', {
+                detail: {
+                    id: 'item0',
+                    parentid: '1898f6de-2826-2130-bd02-0ca82f83c21e'
+                }
+            }))
+        }, 1000)
+    }
+
+
+    async queue({detail}){
+
+        const {
+            id,
+            parentid,
+        } = detail;
+
+        const parent = this.casts.find(x => x.id === parentid)
+        
+        const item = parent?.items.find(x => x.id === id) 
+
+        console.log('App: queue: ')
+        console.log(JSON.parse(JSON.stringify(item)))
+        
+        if(!item){ return console.log('App: no items') }
+
+        const {
+            enclosures,
+        } = item;
+
+        const {
+            url,
+        } = enclosures[0];
+
+        // download item.link to idb
+        /* const data = await fetch(url, {
+            mode: 'no-cors',
+            headers: {
+                "Access-Control-Allow-Origin": "https://www.patreon.com",
+                "Origin": "https://www.patreon.com",
+            }
+        }) */
+
+        //const data = new Audio(url)
+        //const response = await fetch('https://ourrss-proxy.herokuapp.com/' + url)
+        //console.log(await response.blob())
+
+
+    }
+
+    
 
     /* async function updateCast(url, id){
         await deleteCast(id)
