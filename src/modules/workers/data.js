@@ -5,7 +5,6 @@ import {
 
 
 self.addEventListener( 'message', async (event) => {
-    console.log(event)
 
     const {type} = event.data;
 
