@@ -1,7 +1,7 @@
 import { openDB } from 'idb';
 
 const DB_NAME = 'ourss'
-const VERSION = 1
+const VERSION = 2
 
 
 const DB = openDB(DB_NAME, VERSION, {
@@ -10,6 +10,14 @@ const DB = openDB(DB_NAME, VERSION, {
 		if(!db.objectStoreNames.contains('casts')) {
 			// Create a store of objects
 			db.createObjectStore('casts', {
+				// The 'id' property of the object will be the key.
+				keyPath: 'id',
+				autoIncrement: false,
+			});
+		}
+		if(!db.objectStoreNames.contains('audio')) {
+			// Create a store of objects
+			db.createObjectStore('audio', {
 				// The 'id' property of the object will be the key.
 				keyPath: 'id',
 				autoIncrement: false,
@@ -77,14 +85,3 @@ export async function getItems(store) {
 export async function checkBaseExists(store) {
 	return (await window.indexedDB.databases()).map(db => db.name).includes(store);
 } // @param {Boolean} create Optional; create the store if it doesn't exist
-
-
-/**
- * Get items of a record / episodes of a show
- * @param {String} id id of parent record
- * @param {String} store (optional) name of database store to get all from
- * @returns {Promise} resolves  array of items
- */
-export async function getChildItems(id,) {
-	return (await getItemById( id )).items;
-}
