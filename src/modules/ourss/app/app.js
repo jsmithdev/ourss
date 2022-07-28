@@ -445,26 +445,17 @@ export default class App extends LightningElement {
 
         const keys = await getKeys('audio');
 
-        const parentIds = keys.map(s => s.substring(0, s.indexOf(';;;')));
-        console.log(keys)
-        const itemIds = keys.map(s => s.substring(s.indexOf(';;;')+3, s.length));
+        const test = keys.reduce((acc, k) => {
 
-        console.log('App: loading playlist ', parentIds)
-        console.log('App: loading playlist ', itemIds)
+            const pid = k.substring(0, k.indexOf(';;;'));
+            const id = k.substring(k.indexOf(';;;')+3, k.length)
+            const c = this.casts.find(c => c.id === pid);
+            const i = c.items.find(i => i.id === id);
+            i.parentid = c.id;
 
-        const casts = this.casts.filter(o => parentIds.includes(o.id));
+            //console.log('App: loading i ',  JSON.parse(JSON.stringify(i)))
 
-        const test = parentIds.reduce((acc, parentId) => {
-            const c = casts.find(c => c.id === parentId);
-            console.log('App: loading c ',  JSON.parse(JSON.stringify(c)))
-            const items = c.items
-                .filter(i => itemIds.includes(i.id))
-                .map(i => {
-                    i.parentid = c.id;
-                    return i;
-                });
-            acc = [...acc, ...items];
-            return acc
+            return [...acc, i];
         }, []);
         
 
