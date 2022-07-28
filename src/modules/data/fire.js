@@ -97,12 +97,12 @@ export async function addToFire(url, id) {
 
     // move to firestore
     const db = getFirestore(fire);
-    console.log('Fire: db ', db)
+    //console.log('Fire: db ', db)
     const ref = collection(db, "casts");
     const o = {url,id}
-    console.log('INSERT')
-    console.log(o)
     await setDoc(doc(ref), o);
+
+    console.log('Fire: inserted');
 
     return o;
 }

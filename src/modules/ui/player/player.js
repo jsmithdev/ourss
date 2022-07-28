@@ -31,25 +31,19 @@ export default class Player extends LightningElement {
         }
     }
     
-    navigate(view, value) {
+    navigate(event) {
+
+        const { view } = event.currentTarget.dataset || event.target.dataset;
+
+        if(!view) return;
         
         this.dispatchEvent(new CustomEvent('navigate', {
             bubbles: true,
             composed: true,
             detail: {
                 view,
-                value,
             },
         }));
-    }
-    toggleSettings() {
-        this.showSettings = !this.showSettings;
-        this.navigate('settings', this.showSettings)
-    }
-    
-    toggleList() {
-        this.showList = !this.showList;
-        this.navigate('playlist', this.showList)
     }
 
     get src() {
@@ -59,7 +53,11 @@ export default class Player extends LightningElement {
         return this.current?.itunes_image?.href || this.current.image;
     }
     get title() {
-        return this.current?.title || '';
+        const s = this.current?.title;
+        if(!s) return '';
+        return s.length > 50
+            ? `${s.substring(0,45)}...`
+            : s;
     }
     get name() {
         return this.current?.name || '';
@@ -76,7 +74,6 @@ export default class Player extends LightningElement {
 
     loadPrevious() {
         console.log('Player: loading previous')
-        console.log(JSON.parse(JSON.stringify({localStorage: localStorage})))
 
         const store = {
             image: localStorage.image,
@@ -85,8 +82,6 @@ export default class Player extends LightningElement {
             time: localStorage.time,
             title: localStorage.title,
         }
-
-        console.log(JSON.parse(JSON.stringify({store: store})))
         
         this.current = store;
     }
@@ -97,8 +92,6 @@ export default class Player extends LightningElement {
         if(typeof this.Audio.pause === 'function') this.Audio.pause();
 
         const blob = await this.getLocalBlob(this.src);
-        console.log('TEST >>>>')
-        console.log(blob)
 
         this.Audio = new Audio( blob ? URL.createObjectURL(blob) : this.src);
 
@@ -138,7 +131,7 @@ export default class Player extends LightningElement {
         return this.Audio.play();
     }
     pause() {
-        console.log('Player: pausing ', this.Audio?.name)
+        console.log('Player: pausing ', `${this.name} - ${this.title}`)
         this.paused = true;
         return this.Audio.pause();
     }
@@ -220,18 +213,6 @@ export default class Player extends LightningElement {
         localStorage.title = this.title
         localStorage.name = this.name
 
-
-        // todo need retest src error via mobile
-
-        console.log('Player: metadata ', {
-            title: this.title,
-            artist: this.name,
-            artwork: [{
-                src: this.currentImage
-            }]
-        })
-
-
         navigator.mediaSession.metadata = new MediaMetadata({
             title: this.title,
             artist: this.name,
@@ -283,27 +264,6 @@ export default class Player extends LightningElement {
         console.log('Player: emptied ', message)
         
         //this.sendMessage(message);
-    }
-
-    radio() {
-
-        const radio = new Audio(`/resources/radio.mp3`)
-        radio.loop = true
-        radio.play()
-
-        const callback = () => {
-            radio.pause()
-            //this.togglePlay()
-            this.Audio.addEventListener('ended', () => this.radio())
-        }
-
-        this.dispatchEvent(new CustomEvent('radio', {
-            bubbles: true,
-            composed: true,
-            detail: {
-                callback: callback.bind(this),
-            },
-        }));
     }
 
     togglePlay(){

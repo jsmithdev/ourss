@@ -1,6 +1,8 @@
 
 button {
-    width: -webkit-fill-available;
+    max-width: 25rem;
+    padding: 0 4rem;
+    width: fit-content;
     height: 50px;
     cursor: pointer;
     position: relative;

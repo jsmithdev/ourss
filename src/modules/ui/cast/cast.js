@@ -33,7 +33,7 @@ export default class Cast extends LightningElement {
 
         this.current = cast;
 
-        console.log('Cast: set current cast ', cast)
+        console.log('Cast: set current cast ')
     }
 
     togLoad() {
@@ -45,7 +45,7 @@ export default class Cast extends LightningElement {
         const { id } = event.currentTarget.dataset;
         
         if(this.prevSelected === id){
-            console.log('Cast: toggling off ', id)
+            // toggling off
             this.items = this.items.map(i => {
                 
                 i.selected = false;
@@ -60,7 +60,7 @@ export default class Cast extends LightningElement {
         }
 
         this.prevSelected = id;
-        console.log('Cast: toggling on ', id)
+        // toggling on
 
         this.items = this.items.map(i => {
             
@@ -79,7 +79,7 @@ export default class Cast extends LightningElement {
             parentid,
         } = event.currentTarget.dataset;
 
-        console.log('Cast: play ', id, ' of ', parentid)
+        //console.log('Cast: play ', id, ' of ', parentid)
 
         if(!id || !parentid){ return undefined }
 
@@ -98,19 +98,18 @@ export default class Cast extends LightningElement {
         event.cancelBubble = true;
         this.isLoading = true;
 
-        const cb = c => {
-            console.log('CALLBACK ', c)
+        const callback = c => {
             this.cast = c;
             this.isLoading = false
         }
 
-        // todo pass only what's needed
         this.dispatchEvent(new CustomEvent('refresh', {
             bubbles: true,
             composed: true,
             detail: {
-                ...this.cast,
-                cb,
+                id: this.cast.id,
+                feed: this.cast.feed,
+                callback,
             },
         }));
     }

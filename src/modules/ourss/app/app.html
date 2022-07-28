@@ -48,6 +48,7 @@
             <section>
                 <ui-settings
                     user={user}
+                    onradio={radio}
                     onsignin={signIn}
                     onadd={addCast}
                 ></ui-settings>
@@ -57,7 +58,6 @@
         <footer>
             <ui-player
                 current={current}
-                onradio={radio}
                 onmessage={messenger}
                 onnavigate={navigate}
             ></ui-player>

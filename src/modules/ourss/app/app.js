@@ -62,6 +62,7 @@ export default class App extends LightningElement {
         if(!this._init){
             this._init = true;
             this.onkeyup = this.hotkeys;
+            this.swipeListeners();
         }
     }
     
@@ -76,7 +77,9 @@ export default class App extends LightningElement {
             this.dom.main.scrollTo(this.dom.main.scrollWidth / 1, 0)
         }
         else if(str === 'playlist'){
-            this.dom.main.scrollTo(this.dom.main.scrollWidth / 2, 0)
+            this.current?.id
+            ? this.dom.main.scrollTo(this.dom.main.scrollWidth / 2, 0)
+            : this.dom.main.scrollTo(this.dom.main.scrollWidth / 3, 0);
         }
     }
     navigate({detail}){
@@ -85,7 +88,7 @@ export default class App extends LightningElement {
 
         console.log('App: v/v ', view, value)
 
-        if(value){
+        if(value === undefined || value === true){
             this.view(view)
         }
         else {
@@ -133,16 +136,28 @@ export default class App extends LightningElement {
         if(key === 'Space') console.log('space');
     }
 
-    radio({detail}){
+    radio(){
 
-        const {callback} = detail;
+        const radio = new Audio(`/resources/radio.mp3`)
+        radio.loop = true
+        radio.play()
+
+        const callback = () => {
+            radio.pause()
+            //this.togglePlay()
+            //this.Audio.addEventListener('ended', () => this.radio())
+        }
 
         const feed = this.casts[Math.floor(Math.random() * this.casts.length) + 0]
         const cast = feed.items[Math.floor(Math.random() * feed.items.length) + 0]
-        console.log(cast)
-        console.log(callback)
-        this.current = cast;
-        setTimeout(() => callback(cast), 1000)
+        
+        this.setCurrent({
+            detail: {
+                id: cast.id,
+                parentid: feed.id,
+            }
+        });
+        setTimeout(() => callback(), 1000)
     }
     
     messenger({detail}){
@@ -151,13 +166,13 @@ export default class App extends LightningElement {
 
     async refresh({detail}){
 
-        const {feed, id} = detail;
+        const {feed, id, callback} = detail;
 
         const cast = await updateCast(feed, id)
 
         this.updateSortCast(cast)
 
-        if(detail.cb) detail.cb(cast);
+        if(callback) callback(cast);
     }
     async favorite({detail}){
 
@@ -257,13 +272,13 @@ export default class App extends LightningElement {
                 });
             })
 
+            console.log('App: had to get default casts')
             // have loaded some defaults
             // on login, we'll check remote db
             return true;
         }
         else {
             console.log('App: had local casts')
-            console.log(casts)
             this.updateSortCasts(casts)
         }
 
@@ -457,12 +472,77 @@ export default class App extends LightningElement {
 
             return [...acc, i];
         }, []);
-        
-
-        console.log('App: loading playlist test')
-        console.log( JSON.parse(JSON.stringify(test)))
 
         this.playlist = test
+    }
+
+    swipeListeners(){
+        this.dom.main.addEventListener(
+            'touchstart',
+            event => this.handleTouchStart(event),
+            false
+        );
+        this.dom.main.addEventListener(
+            'touchmove',
+            event => this.handleTouchMove(event),
+            false
+        );
+    }
+    handleTouchStart(event) {
+        if (this.ignoreSwipe(event)) {
+            this._xDown = undefined;
+            this._yDown = undefined;
+            console.log('IGNORE')
+            return;
+        }
+    
+        const firstTouch = event.touches[0];
+        this._xDown = firstTouch.clientX;
+        this._yDown = firstTouch.clientY;
+    }
+    handleTouchMove(event) {
+
+        if (this.ignoreSwipe(event)) {
+            console.log('IGNORE')
+            event.preventDefault();
+            return;
+        }
+        
+        if (!this._xDown || !this._yDown) {
+            return;
+        }
+    
+        const xUp = event.touches[0].clientX;
+        const yUp = event.touches[0].clientY;
+    
+        const xDiff = this._xDown - xUp;
+        const yDiff = this._yDown - yUp;
+    
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            /*most significant*/
+            if (this.xDiff > 0) {
+                /* left swipe */
+                console.info('app: left swipe ', true);
+            } else {
+                /* right swipe */
+                console.info('app: right swipe ', true);
+            }
+        } else {
+            if (this.yDiff > 0) {
+                /* up swipe */
+                console.info('app: up swipe ', true);
+            } else {
+                /* down swipe */
+                console.info('app: down swipe ', true);
+            }
+        }
+    
+        /* reset values */
+        this._xDown = null;
+        this._yDown = null;
+    }
+    ignoreSwipe(event) {
+        return event.path.slice(0,5).some(x => x.classList?.contains('noswipe'));
     }
 
 }

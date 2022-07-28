@@ -4,8 +4,6 @@ export default class Settings extends LightningElement {
 
     showSignIn = false;
     
-    signInButtonClass = ''
-
     @api user = {}
 
     get username(){
@@ -51,5 +49,15 @@ export default class Settings extends LightningElement {
             // todo have toast for user
             console.warn('URL should be valid and https')
         }
+    }
+
+
+
+    radio() {
+
+        this.dispatchEvent(new CustomEvent('radio', {
+            bubbles: true,
+            composed: true,
+        }));
     }
 }

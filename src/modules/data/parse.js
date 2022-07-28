@@ -9,6 +9,7 @@ import { guid } from './util';
  */
 export async function parseUrl(url, id) {
     try {
+        console.log('Parser: Fetching feed')
         return parse(await (await fetch(url)).text(), url, id);
     } catch (error) {
         try {
@@ -28,7 +29,7 @@ export async function parseUrl(url, id) {
  * @returns Promise resolves rss/xml text from feed
  */
 async function proxy(url) {
-    console.log('TRYING AGAIN')
+    console.log('Parser: Feed failed, trying again')
     const response = await fetch('https://ourrss-proxy.herokuapp.com/' + url);
     return response.text();
 }

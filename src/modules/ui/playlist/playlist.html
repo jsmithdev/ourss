@@ -11,13 +11,13 @@
             <template for:each={items} for:item="item">
                 <div 
                     key={item.id}
-                    class="item"
+                    class="item noswipe"
                     onclick={play}
                     data-id={item.id}
                     data-parentid={item.parentid}
                 >
-                    <div class="heading">
-                    <span class="title">{item.title}</span>
+                    <div class="heading noswipe">
+                    <span class="title noswipe">{item.title}</span>
                     <br/>
                     {item.date}
                     </div>
