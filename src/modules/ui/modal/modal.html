@@ -1,9 +1,57 @@
 <template>
 
-    <template if:true={isOpen}>
-        <div class="awesomeModal__overlay "></div>
-        <div class="awesomemodal">
-            <slot name="content"></slot>
-        </div>
-    </template>
+	<div class="trigger" onclick={show}>
+		<slot name="trigger">
+			<a>{trigger}</a>
+		</slot>
+	</div>
+
+
+	<template if:true={active}>
+		<div
+			role="dialog"
+			tabindex="-1"
+			aria-modal="true"
+			class={modalClassList}>
+
+			<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLiveLabel">{header}</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick={close}>
+					<span aria-hidden="true">X</span>
+					</button>
+				</div>
+
+
+				<div class="modal-body">
+					<slot name="content">
+						Nothing in modal's content slot. See <a href="https://github.com/jsmithdev/modal">readme</a> for more.
+					</slot>
+				</div>
+
+
+
+				<footer class="modal-footer">
+
+					<div class="footer__center">
+						<slot name="footer-center"></slot>
+					</div>
+					
+					<button 
+						label="Close"
+						onclick={close}
+					></button>
+					
+					<slot name="footer"></slot>
+
+				</footer>
+			</div>
+			</div>
+		</div>
+		<div class="backdrop backdrop_open"></div>
+		
+	</template>
+	
 </template>

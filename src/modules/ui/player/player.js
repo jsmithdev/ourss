@@ -1,5 +1,10 @@
 import { api, LightningElement } from 'lwc';
 
+import {
+    setItem,
+    getItemById,
+} from '../../data/idb'
+
 export default class Player extends LightningElement {
 
     autoplay = false;
@@ -44,11 +49,11 @@ export default class Player extends LightningElement {
     
     toggleList() {
         this.showList = !this.showList;
-        this.navigate('details', this.showList)
+        this.navigate('playlist', this.showList)
     }
 
     get src() {
-        return this.current?.enclosures?.find(x => x)?.url || this.current.src || localStorage.src || '';
+        return this.current?.src || this.current.src || localStorage.src || '';
     }
     get currentImage() {
         return this.current?.itunes_image?.href || this.current.image;
@@ -66,7 +71,6 @@ export default class Player extends LightningElement {
             progressAmount: this.template.querySelector('.progressAmount'),
             expand: this.template.querySelector('.expandid'),
             section: this.template.querySelector('section'),
-            modal: this.template.querySelector('ui-modal'),
         }
     }
 
@@ -87,12 +91,16 @@ export default class Player extends LightningElement {
         this.current = store;
     }
 
-    newAudio(options = {}) {
+    async newAudio(options = {}) {
         console.log('Player: setting new audio', options)
         
         if(typeof this.Audio.pause === 'function') this.Audio.pause();
 
-        this.Audio = new Audio(this.src);
+        const blob = await this.getLocalBlob(this.src);
+        console.log('TEST >>>>')
+        console.log(blob)
+
+        this.Audio = new Audio( blob ? URL.createObjectURL(blob) : this.src);
 
         this.Audio.currentTime = this.current?.time || 0;
 
@@ -371,5 +379,15 @@ export default class Player extends LightningElement {
         return Array.from(event.touches).some((t) =>
             t.target.classList.contains('noswipe')
         );
+    }
+
+
+    /**
+     * get audio 
+     * @param {String} url 
+     * @returns {Blob} | undefined
+     */
+    async getLocalBlob(url){
+        return (await getItemById( url, 'audio'))?.blob;
     }
 }

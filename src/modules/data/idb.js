@@ -78,6 +78,15 @@ export async function getItems(store) {
 }
 
 /**
+ * Get all keys/ids from a database store
+ * @param {String} store name of database store to get all keys from
+ * @returns {Promise} resolves  array of keys
+ */
+export async function getKeys(store) {
+	return (await DB).getAllKeys(store);
+}
+
+/**
  * Ensure the database store exists
  * @param {String} store name of database store to get all from
  * @returns {Promise} resolves  array of items
