@@ -42,25 +42,6 @@ export const defaults = {
 
 
 
-/**
- * Structure a feed of data
- * @param {Object} feed Object
- * @returns {Object} structured feed Object
- * { id date, data, moddate }
- *  */
-export function structure(feed) {
-    
-    feed.id = feed.id || guid()
-    feed.items = feed.items.map((item, index) => ({
-        id: `item-${index}`,
-        date: new Date(item.created).toDateString(),
-        data: item.enclosures || item.media,
-        moddate: new Date().getTime(),
-    }));
-    
-    return feed
-}
-
 export function storeCast(cast) {
     setItem('casts', cast);
     return cast;
@@ -96,18 +77,6 @@ export async function fireCasts(){
         dbCasts.map(async c => 
             storeCast( structure( (await parseUrl(c.feed, c.id) ))))
     ); */
-}
-
-/**
- * 
- * @param {Object} feed or cast Object { id, url }
- * @returns {Object} structured feed Object with data parsed, see items[]
- */
-export async function parseAndStructure(feed){
-
-    console.log('MODULES/DATA/UTIL: parseAndStructure CALLED')
-    
-    return structure( (await parseUrl(feed.url, feed.id) ))
 }
 
 export function guid() {

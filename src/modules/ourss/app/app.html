@@ -12,7 +12,8 @@
 
         <main class="swipe-view">
             <section class="casts">
-
+                
+                
                 <template if:true={isLoading}>
                     <div class="load-container">
                         <ui-loading></ui-loading>
@@ -28,6 +29,7 @@
                 <section class="deets"><!-- style="background-color: rgb(5, 250, 208);" -->
                     <ui-cast
                         cast={selected}
+                        onqueue={queue}
                         onselect={setCurrent}
                         onrefresh={refresh}
                         onfavorite={favorite}
@@ -35,6 +37,14 @@
                     ></ui-cast>
                 </section>
             </template>
+            <section class="playlist"><!-- style="background-color: rgb(5, 250, 208);" -->
+            
+                <ui-playlist
+                    items={playlist}
+                    onselect={setCurrent}
+                ></ui-playlist>
+
+                </section>
             <section>
                 <ui-settings
                     user={user}
@@ -53,6 +63,7 @@
             ></ui-player>
         </footer>
     </div>
+
 
     <ui-auth
         onloggedin={loggedIn}

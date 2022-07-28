@@ -1,0 +1,148 @@
+
+@media (hover: hover) and (pointer: fine) {
+    div.items::-webkit-scrollbar {
+        width: 0.75rem;
+    }
+    div.items::-webkit-scrollbar-thumb {
+        outline: rgb(85, 85, 85) solid 1px;
+        background-color: #00000050;
+    }
+}
+
+div.container {
+    user-select: none;
+    display: grid;
+    height: 100%;
+}
+div.head {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    border-radius: 5px 5px 0px 0px;
+}
+
+div.items {
+    user-select: none;
+    font-size: .8rem;
+    overflow: auto;
+    border-radius: 0px 0px 5px 5px;
+}
+
+
+div.item {
+    transition: all 0.25s ease-in-out 0s;
+    font-size: 1rem;
+    vertical-align: middle;
+    color: white;
+    /* padding: 0.5rem 0rem; */
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 1pt solid var(--color-primary);
+}
+div.item path {
+    fill: var(--color-primary);
+}
+div.item:nth-child(even) {
+    /* background: var(--color-primary); */
+    user-select: none;
+}
+div.item:nth-child(even) div.description {
+    /* background-image: linear-gradient(to bottom, var(--color-primary) 0%, #00398b 100%); */
+    user-select: none;
+}
+div.item:nth-child(even) path {
+    /* fill: var(--color-accent); */
+    user-select: none;
+}
+
+
+div.heading {
+    padding: 0.5rem 0rem;
+}
+span.title {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+
+
+h1 {
+    color: transparent;
+    font-size: 3rem;
+    -webkit-text-stroke: 2px #F8F8F8;
+    text-shadow: 0px 2px 4px transparent;
+    font-style: italic;
+    text-align: center;
+}
+
+
+
+/* 
+div.description::-webkit-scrollbar {
+    width: .25rem;
+}
+div.description::-webkit-scrollbar-track {
+    background: #555;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+div.description:nth-child(even)::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    outline: 1px solid #555;
+}
+div.description::-webkit-scrollbar-thumb {
+    background-color: var(--color-accent);
+    outline: 1px solid #555;
+}
+
+div.description {
+    user-select: none;
+    max-height: 15vh;
+    overflow: auto;
+    padding: 0.5rem 0.25rem;
+    margin-top: 6px;
+    background-image: linear-gradient(to bottom, #05fad000 0%, var(--color-primary) 100%);
+}
+div.description > span {
+    height: auto;
+    word-break: break-word;
+}
+
+div.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--color-primary);
+    padding: 0.5rem 0rem;
+}
+
+
+
+
+svg {
+    width: 3rem;
+    height: 3rem;
+    background: rgb(255, 255, 255);
+    border-radius: 50px;
+    padding: 5px;
+}
+svg.refresh {
+    transition: all 0.5s ease-in-out;
+}
+
+path.heart, svg.delete>path, svg.refresh>path {
+    fill: var(--color-pink);
+}
+path.heart-shaped-box {
+    fill: none;
+    stroke: var(--color-pink);
+    stroke-width: 2px;
+}
+
+img.card-img {
+    user-select: none;
+    transition: all 0.5s ease-in-out;
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+}
+*/

@@ -10,9 +10,10 @@ import {
 } from '../../data/util';
 
 import {
-    getItems,
+    getKeys,
     setItem,
-    deleteItemById,
+    getItems,
+    getItemById,
 } from '../../data/idb'
 
 import {
@@ -32,9 +33,10 @@ export default class App extends LightningElement {
     selected = {}
     favorites = []
 
+    playlist = [];
+
 	constructor() {
 		super();
-        console.log()
 		this.worker = new Worker(new URL('./../../workers/data.js', import.meta.url));
 		this.worker.addEventListener( 'message', event => 
             this.processed( event.data?.whoami || 'web worker', event ) );
@@ -73,6 +75,9 @@ export default class App extends LightningElement {
         else if(str === 'settings'){
             this.dom.main.scrollTo(this.dom.main.scrollWidth / 1, 0)
         }
+        else if(str === 'playlist'){
+            this.dom.main.scrollTo(this.dom.main.scrollWidth / 2, 0)
+        }
     }
     navigate({detail}){
         
@@ -98,7 +103,7 @@ export default class App extends LightningElement {
 
         const parent = this.casts.find(x => x.id === parentid)
 
-        //console.log('App: setCurrent: ', id, parentid, JSON.parse(JSON.stringify(parent)))
+        console.log('App: setCurrent: ', id, parentid, JSON.parse(JSON.stringify(parent)))
         
         const item = parent?.items.find(x => x.id === id) 
 
@@ -264,6 +269,8 @@ export default class App extends LightningElement {
 
         this.isLoading = false;
 
+        this.loadPlaylist()
+
         if(!this.remoteDbChecked){
             this.checkRemoteDb();
         }
@@ -312,7 +319,7 @@ export default class App extends LightningElement {
      * @param {MessageEvent} event sent back from web worker
      */
     async processed(name, event){
-        console.log('PROCESSING started by: ', name)
+        console.log('PROCESSED by: ', name)
         console.log(event)
         if(name === 'worker-parser'){
             const {data, store} = event.data;
@@ -325,7 +332,8 @@ export default class App extends LightningElement {
     }
 
     updateSortCast(cast){
-    
+        if(!cast) return;
+        
         const { id } = cast;
         const faves = this.casts.filter(c => c.fav && c.id !== id)
         const others = this.casts.filter(c => !c.fav && c.id !== id)
@@ -345,6 +353,7 @@ export default class App extends LightningElement {
             ];
         }
     }
+
     updateSortCasts(casts){
 
         const faves = casts.filter(c => c.fav)
@@ -357,13 +366,112 @@ export default class App extends LightningElement {
     }
 
 
-    /* async function updateCast(url, id){
-        await deleteCast(id)
-        return storeCast( (await parseUrl(url, id) ))
+    async queue({detail}){
+
+        const {
+            id,
+            parentid,
+        } = detail;
+
+        const parent = this.casts.find(x => x.id === parentid)
+        
+        const item = parent?.items.find(x => x.id === id)
+
+        item.parentid = parentid;
+
+        console.log('App: queue: ')
+        console.log(JSON.parse(JSON.stringify(item)))
+        
+        if(!item?.id){ return console.log('App: no items') }
+    
+        // never run if exists
+        if( !await this.getLocalBlob(item.id) ){
+            // get remote data, set local blob
+            this.setBlobByUrl(item);
+        }
     }
 
-    async function deleteCast(id){
-        return deleteItemById('casts', id)
-    } */
+    /**
+     * get audio 
+     * @param {String} url 
+     * @returns {Blob} | undefined
+     */
+    async getLocalBlob(url){
+        return (await getItemById( url, 'audio'))?.blob;
+    }
+
+    async setBlobByUrl(item){
+        const audio = {
+            id: `${item.parentid};;;${item.id}`,
+            saved: new Date().getTime(),
+            blob: await this.getUrlBlob(item.id),
+        }
+
+        if(audio.blob) {
+            await setItem('audio', audio);
+            item.cached = true;
+            this.playlist = [...this.playlist, item];
+        }
+    }
+
+    /**
+     * get data from url in blob form
+     * @param {String} url 
+     * @returns Blob | undefined
+     */
+    async getUrlBlob(url){
+        try {
+            return (await fetch(url)).blob();
+        }
+        catch(e){
+            console.log(e)
+            console.log('Trying proxy')
+            try {
+                return (await fetch('https://ourrss-proxy.herokuapp.com/' + url)).blob();
+            }
+            catch(e){
+                console.log(e)
+                console.log('Proxy could retrieve either')
+            }
+        }
+    }
+
+    /**
+     * check index db for cache and set playlist array
+     * @returns {Array}
+     */
+    async loadPlaylist(){
+        console.log('App: loading playlist')
+
+        const keys = await getKeys('audio');
+
+        const parentIds = keys.map(s => s.substring(0, s.indexOf(';;;')));
+        console.log(keys)
+        const itemIds = keys.map(s => s.substring(s.indexOf(';;;')+3, s.length));
+
+        console.log('App: loading playlist ', parentIds)
+        console.log('App: loading playlist ', itemIds)
+
+        const casts = this.casts.filter(o => parentIds.includes(o.id));
+
+        const test = parentIds.reduce((acc, parentId) => {
+            const c = casts.find(c => c.id === parentId);
+            console.log('App: loading c ',  JSON.parse(JSON.stringify(c)))
+            const items = c.items
+                .filter(i => itemIds.includes(i.id))
+                .map(i => {
+                    i.parentid = c.id;
+                    return i;
+                });
+            acc = [...acc, ...items];
+            return acc
+        }, []);
+        
+
+        console.log('App: loading playlist test')
+        console.log( JSON.parse(JSON.stringify(test)))
+
+        this.playlist = test
+    }
 
 }

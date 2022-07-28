@@ -18,6 +18,7 @@ export async function parseUrl(url, id) {
             console.warn(er)
         }
     }
+    
     return undefined;
 }
 
@@ -29,7 +30,6 @@ export async function parseUrl(url, id) {
 async function proxy(url) {
     console.log('TRYING AGAIN')
     const response = await fetch('https://ourrss-proxy.herokuapp.com/' + url);
-    //const response = await fetch('https://cors-anywhere.herokuapp.com/' + url);
     return response.text();
 }
 
@@ -67,16 +67,13 @@ export function parse (data, url, id = guid()) {
     let items = channel.item || channel.entry;
     if (items && !Array.isArray(items)) items = [items];
 
-
-    console.log(items[0])
-
-
     for (let i = 0; i < items.length; i++) {
         const val = items[i];
-        let media = {};
+        const media = {};
 
-        let obj = {
-            id: val.guid && val.guid.$t ? val.guid.$t : val.id,
+        const obj = {
+            get id(){ return this.src },
+            get src(){ return this.enclosures.find(x => x.url)?.url },
             title: val.title && val.title.$text ? val.title.$text : val.title,
             description: val.summary && val.summary.$text ? val.summary.$text : val.description,
             link: val.link && val.link.href ? val.link.href : val.link,
@@ -85,7 +82,11 @@ export function parse (data, url, id = guid()) {
             created: val.updated ? Date.parse(val.updated) : val.pubDate ? Date.parse(val.pubDate) : val.created ? Date.parse(val.created) : Date.now(),
             category: val.category || [],
             content: val.content && val.content.$text ? val.content.$text : val['content:encoded'],
-            enclosures: val.enclosure ? Array.isArray(val.enclosure) ? val.enclosure : [val.enclosure] : []
+            enclosures: val.enclosure ? Array.isArray(val.enclosure) ? val.enclosure : [val.enclosure] : [],
+
+            get date(){ return new Date(this.created).toDateString() },
+            moddate: new Date().getTime(),
+            selected: false,
         };
 
         ['content:encoded', 'podcast:transcript', 'itunes:summary', 'itunes:author', 'itunes:explicit', 'itunes:duration', 'itunes:season', 'itunes:episode', 'itunes:episodeType', 'itunes:image']
@@ -114,39 +115,11 @@ export function parse (data, url, id = guid()) {
 
         }
 
-        Object.assign(obj, { media });
-
-        rss.items.push(obj);
+        rss.items.push({ ...media, ...obj });
     }
 
 
-    return structure(rss);
-}
-
-/**
- * Structure a cast of data
- * @param {Object} cast Object
- * @returns {Object} structured feed Object
- *  */
- export function structure(cast) {
-
-    //console.log('STRUCTURE B4')
-    //console.log(cast)
-    
-    cast.id = cast.id || guid()
-    cast.items = cast.items.map((item, index) => ({
-        ...item,
-        id: `item${index}`,
-        date: new Date(item.created).toDateString(),
-        data: item.enclosures || item.media,
-        moddate: new Date().getTime(),
-        selected: false,
-    }));
-    
-    //console.log('STRUCTURE AFTER')
-    //console.log(cast)
-
-    return cast
+    return rss;
 }
 
 /**

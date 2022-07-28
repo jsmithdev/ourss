@@ -151,7 +151,23 @@ export default class Cast extends LightningElement {
     }
 
     addToQueue(event) {
-        const { id } = event.target.dataset;
-        console.log('Cast: add to queue ', id)
+
+        const {
+            id,
+            parentid,
+        } = event.currentTarget.dataset;
+
+        console.log('Cast: queue ', id, ' of ', parentid)
+
+        if(!id || !parentid){ return undefined }
+
+        this.dispatchEvent(new CustomEvent('queue', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                id,
+                parentid,
+            },
+        }));
     }
 }
