@@ -24,17 +24,6 @@ div.head {
     background: url(../../../resources/icons/icon-128x128.png) center center no-repeat;
 }
 
-h1 {
-    color: transparent;
-    font-size: 4rem;
-    -webkit-text-stroke: 2px rgb(248, 248, 248);
-    text-shadow: rgb(23 2 50 / 5%) 0px 2px 4px;
-    font-style: italic;
-    text-align: center;
-    margin: 0px;
-    /* text-shadow: 0 0 7px var(--color-light), 0 0 10px #fff, 0 0 21px #fff, 0 0 42px var(--color-primary), 0 0 82px var(--color-secondary), 0 0 92px var(--color-accent), 0 0 102px var(--color-dark), 0 0 149px var(--color-accent); */
-}
-
 div.items {
     user-select: none;
     font-size: 0.8rem;
