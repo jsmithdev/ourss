@@ -4,7 +4,7 @@
         <div class="head">
             <div class="image-bg">
                 <template if:true={isLoading}>
-                    <div class="load-container" onclick={togLoad}>
+                    <div class="load-container">
                         <ui-loading
                             width="10rem"
                             height="10rem"
@@ -37,42 +37,41 @@
             
         <div class="items">
             <template for:each={items} for:item="item">
-                <div 
+                
+                <ui-list
                     key={item.id}
-                    data-id={item.id}
-                    class="item"
-                    onclick={selectItem}
-                >
-                    <div class="heading">
-                    <span class="title">{item.title}</span>
-                    <br/>
-                    {item.date}
-                    </div>
-                    <template if:true={item.selected}>
-                        
-                        <div class="description">
-                            <span>{item.description}</span>
-                        </div>
-                        
+                    title={item.title}
+                    date={item.date}
+                    description={item.description}
+                >    
+                    <span slot="footer">
                         <div class="controls">
-                            <div onclick={addToQueue}
-                                data-id={item.id}
-                                data-parentid={cast.id}>
-                                <svg class="queue" viewBox="0 0 24 24" onclick={addToQueue}>
+                            <div>
+                                <svg 
+                                    onclick={addToQueue}
+                                    data-id={item.id}
+                                    data-parentid={cast.id} 
+                                    class="queue" 
+                                    viewBox="0 0 24 24"
+                                >
                                     <g><rect fill="none" height="24" width="24"/></g>
                                     <g><path d="M14,10H3v2h11V10z M14,6H3v2h11V6z M18,14v-4h-2v4h-4v2h4v4h2v-4h4v-2H18z M3,16h7v-2H3V16z"/></g>
                                 </svg>
                             </div>
-                            <div onclick={play}
-                                data-id={item.id}
-                                data-parentid={cast.id}>
-                                <svg class="play" viewBox="0 0 24 24" onclick={play}>
+                            <div >
+                                <svg 
+                                    onclick={play}
+                                    data-id={item.id}
+                                    data-parentid={cast.id}
+                                    class="play" 
+                                    viewBox="0 0 24 24" 
+                                >
                                     <path d="M8 5v14l11-7z"></path>
                                 </svg>
                             </div>
                         </div>
-                    </template>
-                </div>
+                    </span>
+                </ui-list>
             </template>
         </div>
 

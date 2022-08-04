@@ -1,6 +1,6 @@
 {
   "name": "ourss",
-  "version": "0.7.5",
+  "version": "0.7.8",
   "description": "Swank podcast app",
   "main": "index.js",
   "author": "Jamie Smith",

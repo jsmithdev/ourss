@@ -9,17 +9,15 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
-const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
-const watch = process.env.NODE_ENV === 'production' ? false : true;
-
 const { version } = require('./package.json');
 
-console.log(`🐶 Ourss Version: ${version}`);
 
 
 module.exports = (env) => {
 
 	const mode = env.production ? 'production' : 'development'
+
+	console.log(`🐶  Ourss Version: ${version}`);
 	console.log(`🖥️  Build mode: ${mode}`);
 	console.log(`🎗️  Dedicated to Arron Swartz`);
 	console.log('');
@@ -44,12 +42,9 @@ module.exports = (env) => {
 			new LwcWebpackPlugin(),
 			new HtmlWebpackPlugin({ template: './src/index.html' }),
 			new DefinePlugin({
-				__VERSION__: JSON.stringify(version)
+				__VERSION__: JSON.stringify(version),
+				__MODE__: JSON.stringify(mode),
 			}),
-			//new InjectManifest({
-			//	swSrc: '/src/service-worker.js',
-			//	swDest: 'sw.js'
-			//}),
 			new CopyPlugin({
 				patterns: [
 					{
@@ -67,6 +62,7 @@ module.exports = (env) => {
 	
 	// https://github.com/GoogleChrome/workbox/issues/1790
 	if (env.production) {
+		console.log('Creating Service Worker...')
 		config.plugins.push( new InjectManifest({
 			swSrc: '/src/service-worker.js',
 			swDest: 'sw.js'

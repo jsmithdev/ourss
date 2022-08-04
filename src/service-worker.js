@@ -2,10 +2,10 @@
 import { precacheAndRoute } from 'workbox-precaching/precacheAndRoute';
 precacheAndRoute(self.__WB_MANIFEST);
 
-self.addEventListener('activate', (event) => {
+/* self.addEventListener('activate', (event) => {
 	console.log('Service worker activated');
 	event.waitUntil(self.clients.claim());
-});
+}); */
 
 /* 
 import { getRemoteDb } from './modules/data/fire.js';

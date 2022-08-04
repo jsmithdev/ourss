@@ -14,12 +14,17 @@ import {
     setItem,
     getItems,
     getItemById,
+    deleteItemById,
 } from '../../data/idb'
 
 import {
     getRemoteDb,
     setRemoteDb,
 } from '../../data/fire';
+
+import {
+    gestureListeners,
+} from '../../data/gesture';
 
 
 export default class App extends LightningElement {
@@ -39,7 +44,7 @@ export default class App extends LightningElement {
 		super();
 		this.worker = new Worker(new URL('./../../workers/data.js', import.meta.url));
 		this.worker.addEventListener( 'message', event => 
-            this.processed( event.data?.whoami || 'web worker', event ) );
+            this.processed( event ) );
 	}
 
     get hasDetails(){
@@ -62,7 +67,7 @@ export default class App extends LightningElement {
         if(!this._init){
             this._init = true;
             this.onkeyup = this.hotkeys;
-            this.swipeListeners();
+            //gestureListeners.bind(this).call();
         }
     }
     
@@ -106,7 +111,7 @@ export default class App extends LightningElement {
 
         const parent = this.casts.find(x => x.id === parentid)
 
-        console.log('App: setCurrent: ', id, parentid, JSON.parse(JSON.stringify(parent)))
+        //console.log('App: setCurrent: ', id, parentid, parent)
         
         const item = parent?.items.find(x => x.id === id) 
 
@@ -206,9 +211,20 @@ export default class App extends LightningElement {
 
     remove({detail}){
         
-        const {id} = detail;
+        const {
+            id,
+            store,
+        } = detail;
         
-        deleteCast(id)
+        deleteItemById( store, id );
+
+        if(store === 'audio'){
+            const uid = id.substring(id.indexOf(';;;')+3, id.length);
+            this.playlist = this.playlist.filter(x => x.id !== uid);
+        }
+        else if(store === 'casts'){
+            this.casts = this.casts.filter(x => x.id !== id);
+        }
     }
 
     scroll(){
@@ -330,19 +346,21 @@ export default class App extends LightningElement {
 
     /**
      * ran when the data web worker sends a message
-     * @param {String} name of process from web worker
      * @param {MessageEvent} event sent back from web worker
      */
-    async processed(name, event){
-        console.log('PROCESSED by: ', name)
+    async processed(event){
+
+        const {data, store, whoami} = event.data;
+
+        console.log('PROCESSED by: ', whoami)
         console.log(event)
-        if(name === 'worker-parser'){
-            const {data, store} = event.data;
-            if(store){
+        if(whoami === 'worker-parser'){
+            if(store && data){
                 setItem('casts', data)
             }
-            
-            this.updateSortCast(data)
+            if(data){
+                this.updateSortCast(data)
+            }
         }
     }
 
@@ -393,9 +411,6 @@ export default class App extends LightningElement {
         const item = parent?.items.find(x => x.id === id)
 
         item.parentid = parentid;
-
-        console.log('App: queue: ')
-        console.log(JSON.parse(JSON.stringify(item)))
         
         if(!item?.id){ return console.log('App: no items') }
     
@@ -475,74 +490,4 @@ export default class App extends LightningElement {
 
         this.playlist = test
     }
-
-    swipeListeners(){
-        this.dom.main.addEventListener(
-            'touchstart',
-            event => this.handleTouchStart(event),
-            false
-        );
-        this.dom.main.addEventListener(
-            'touchmove',
-            event => this.handleTouchMove(event),
-            false
-        );
-    }
-    handleTouchStart(event) {
-        if (this.ignoreSwipe(event)) {
-            this._xDown = undefined;
-            this._yDown = undefined;
-            console.log('IGNORE')
-            return;
-        }
-    
-        const firstTouch = event.touches[0];
-        this._xDown = firstTouch.clientX;
-        this._yDown = firstTouch.clientY;
-    }
-    handleTouchMove(event) {
-
-        if (this.ignoreSwipe(event)) {
-            console.log('IGNORE')
-            event.preventDefault();
-            return;
-        }
-        
-        if (!this._xDown || !this._yDown) {
-            return;
-        }
-    
-        const xUp = event.touches[0].clientX;
-        const yUp = event.touches[0].clientY;
-    
-        const xDiff = this._xDown - xUp;
-        const yDiff = this._yDown - yUp;
-    
-        if (Math.abs(xDiff) > Math.abs(yDiff)) {
-            /*most significant*/
-            if (this.xDiff > 0) {
-                /* left swipe */
-                console.info('app: left swipe ', true);
-            } else {
-                /* right swipe */
-                console.info('app: right swipe ', true);
-            }
-        } else {
-            if (this.yDiff > 0) {
-                /* up swipe */
-                console.info('app: up swipe ', true);
-            } else {
-                /* down swipe */
-                console.info('app: down swipe ', true);
-            }
-        }
-    
-        /* reset values */
-        this._xDown = null;
-        this._yDown = null;
-    }
-    ignoreSwipe(event) {
-        return event.path.slice(0,5).some(x => x.classList?.contains('noswipe'));
-    }
-
 }

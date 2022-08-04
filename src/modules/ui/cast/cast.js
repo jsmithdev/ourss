@@ -7,7 +7,6 @@ import { track, api, LightningElement } from 'lwc';
 export default class Cast extends LightningElement {
 
     current = {}
-    items = []
 
     isLoading = false
 
@@ -16,60 +15,12 @@ export default class Cast extends LightningElement {
         return this.current;
     }
     set cast(c) {
-        console.log('Cast: set given ', c)
-
-        const cast = JSON.parse(JSON.stringify(c));
         
-        const tmp = document.createElement('div');
-        tmp.innerHTML = cast.description || '';
-        cast.description = tmp.textContent || tmp.innerText || '';
-
-        this.items = cast.items.map(obj => {
-            const tmp = document.createElement('div');
-            tmp.innerHTML = obj.description || '';
-            obj.description = tmp.textContent || tmp.innerText || '';
-            return obj;
-        })
-
-        this.current = cast;
-
-        console.log('Cast: set current cast ')
+        this.current = c;
     }
 
-    togLoad() {
-        this.isLoading = !this.isLoading
-    }
-
-    selectItem(event) {
-
-        const { id } = event.currentTarget.dataset;
-        
-        if(this.prevSelected === id){
-            // toggling off
-            this.items = this.items.map(i => {
-                
-                i.selected = false;
-                
-                return i
-            })
-
-            this.prevSelected = undefined;
-            event.target.querySelector('.controls')?.classList.toggle('show')    
-
-            return undefined
-        }
-
-        this.prevSelected = id;
-        // toggling on
-
-        this.items = this.items.map(i => {
-            
-            i.selected = i.id === id;
-            
-            return i
-        })
-
-        setTimeout(() => event.target.querySelector('.controls')?.classList.toggle('show'), 0)
+    get items(){
+        return this.current.items || [];
     }
 
     play(event) {
@@ -145,7 +96,10 @@ export default class Cast extends LightningElement {
         this.dispatchEvent(new CustomEvent('delete', {
             bubbles: true,
             composed: true,
-            detail: { id },
+            detail: { 
+                id,
+                store: 'casts',
+            },
         }));
     }
 
@@ -170,3 +124,39 @@ export default class Cast extends LightningElement {
         }));
     }
 }
+
+/* 
+
+
+    selectItem(event) {
+
+        const { id } = event.currentTarget.dataset;
+        
+        if(this.prevSelected === id){
+            // toggling off
+            this.items = this.items.map(i => {
+                
+                i.selected = false;
+                
+                return i
+            })
+
+            this.prevSelected = undefined;
+            event.target.querySelector('.controls')?.classList.toggle('show')    
+
+            return undefined
+        }
+
+        this.prevSelected = id;
+        // toggling on
+
+        this.items = this.items.map(i => {
+            
+            i.selected = i.id === id;
+            
+            return i
+        })
+
+        setTimeout(() => event.target.querySelector('.controls')?.classList.toggle('show'), 0)
+    }
+     */

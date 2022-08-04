@@ -20,12 +20,9 @@ export default class Casts extends LightningElement {
         event.stopPropagation()
 
         const {id} = event.target.dataset;
-        console.log(id)
+
         //this.selected = this.casts.find(x => x.id === id)
         this.selected = await getItemById(id)
-        console.log(this.selected)
-        console.log('db selected')
-        console.log(JSON.parse(JSON.stringify({selected: this.selected})))
         
         this.lastTarget = id;
 

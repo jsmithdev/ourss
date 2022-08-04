@@ -6,11 +6,12 @@ import {
 
 self.addEventListener( 'message', async (event) => {
 
-    const {type} = event.data;
+    const {type, url, id, store} = event.data;
 
     if(type === 'parse'){
-        const {url, id, store} = event.data;
+
         const data = await parseUrl(url, id);
+
         self.postMessage({
             data,
             store,

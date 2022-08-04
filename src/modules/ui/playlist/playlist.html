@@ -9,35 +9,39 @@
             
         <div class="items">
             <template for:each={items} for:item="item">
-                <div 
+                <ui-list
                     key={item.id}
-                    class="item noswipe"
-                    onclick={play}
-                    data-id={item.id}
-                    data-parentid={item.parentid}
+                    title={item.title}
+                    date={item.date}
+                    description={item.description}
                 >
-                    <div class="heading noswipe">
-                    <span class="title noswipe">{item.title}</span>
-                    <br/>
-                    {item.date}
-                    </div>
-                    <!-- <template if:true={item.selected}>
-                        
-                        <div class="description">
-                            <span>{item.description}</span>
-                        </div>
-                        
+
+                    <span slot="footer">
                         <div class="controls">
-                            <div onclick={play}
-                                data-id={item.id}
-                                data-parentid={cast.id}>
-                                <svg class="play" viewBox="0 0 24 24" onclick={play}>
+                            <div>
+                                <svg 
+                                    onclick={remove}
+                                    data-id={item.id}
+                                    data-parentid={item.parentid}
+                                    class="remove" 
+                                    viewBox="0 0 24 24">
+                                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <svg 
+                                    onclick={play}
+                                    data-id={item.id}
+                                    data-parentid={item.parentid}
+                                    class="play" 
+                                    viewBox="0 0 24 24">
                                     <path d="M8 5v14l11-7z"></path>
                                 </svg>
                             </div>
                         </div>
-                    </template> -->
-                </div>
+                    </span>
+                </ui-list>
+                
             </template>
         </div>
 

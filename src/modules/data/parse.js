@@ -12,11 +12,13 @@ export async function parseUrl(url, id) {
         console.log('Parser: Fetching feed')
         return parse(await (await fetch(url)).text(), url, id);
     } catch (error) {
+        console.warn(error)
+        console.log('Parser: Feed failed, trying again...')
         try {
             return parse(await proxy(url), url, id);
         } catch (er) {
-            console.info('Fallback failed. Can\'t parse the url ', url)
             console.warn(er)
+            console.info('Fallback failed. Can\'t parse the url ', url)
         }
     }
     
@@ -29,7 +31,6 @@ export async function parseUrl(url, id) {
  * @returns Promise resolves rss/xml text from feed
  */
 async function proxy(url) {
-    console.log('Parser: Feed failed, trying again')
     const response = await fetch('https://ourrss-proxy.herokuapp.com/' + url);
     return response.text();
 }
@@ -71,12 +72,14 @@ export function parse (data, url, id = guid()) {
     for (let i = 0; i < items.length; i++) {
         const val = items[i];
         const media = {};
+        
+        const desc = val.summary?.$text ? val.summary.$text : val.description
 
         const obj = {
             get id(){ return this.src },
             get src(){ return this.enclosures.find(x => x.url)?.url },
             title: val.title && val.title.$text ? val.title.$text : val.title,
-            description: val.summary && val.summary.$text ? val.summary.$text : val.description,
+            description: desc,
             link: val.link && val.link.href ? val.link.href : val.link,
             author: val.author && val.author.name ? val.author.name : val['dc:creator'],
             published: val.created ? Date.parse(val.created) : val.pubDate ? Date.parse(val.pubDate) : Date.now(),

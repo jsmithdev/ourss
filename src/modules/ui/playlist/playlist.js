@@ -6,17 +6,7 @@ import { api, LightningElement } from 'lwc';
 
 export default class Cast extends LightningElement {
 
-    @api
-    items = []
-
-
-    selectItem(event) {
-
-        const { id } = event.currentTarget.dataset;
-        
-        console.log('Playlist: selectItem ', id)
-
-    }
+    @api items = [];
 
     play(event) {
 
@@ -35,6 +25,27 @@ export default class Cast extends LightningElement {
             detail: {
                 id,
                 parentid,
+            },
+        }));
+    }
+
+    remove(event) {
+
+        const {
+            id,
+            parentid,
+        } = event.currentTarget.dataset;
+
+        console.log('Playlist: remove item ', id, ' of ', parentid)
+
+        if(!id || !parentid){ return undefined }
+
+        this.dispatchEvent(new CustomEvent('remove', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                id: parentid+';;;'+id,
+                store: 'audio',
             },
         }));
     }

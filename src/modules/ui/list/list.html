@@ -1,0 +1,24 @@
+<template>
+
+    <div class="item" onclick={selectItem}>
+
+        <div class="heading">
+            <span class="title">{title}</span>
+            <br/>
+            {date}
+        </div>
+    
+        <div class="details hide">
+
+            <div class="description">
+                <text-markdown
+                    string={description}
+                ></text-markdown>
+            </div>
+            
+            <slot name="footer">
+            </slot>
+        </div>
+    </div>
+    
+</template>
