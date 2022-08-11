@@ -8,6 +8,35 @@ export default class Cast extends LightningElement {
 
     @api items = [];
 
+    @api next(prevId, prevParent){
+        //console.log('Playlist: next call - ', prevId, ' -- ', prevParent);
+        // remove prev
+        this.remove({
+            currentTarget: {
+                dataset: {
+                    id: prevId,
+                    parentid: prevParent,
+                }
+            }
+        });
+
+        // get next thats not the prev
+        const {
+            id,
+            parentid,
+        } = this.items.find(x => x.id !== prevId);
+
+        // play next
+        this.play({
+            currentTarget: {
+                dataset: {
+                    id,
+                    parentid,
+                }
+            }
+        })
+    }
+
     play(event) {
 
         const {

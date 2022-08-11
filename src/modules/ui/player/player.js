@@ -118,7 +118,19 @@ export default class Player extends LightningElement {
         this.Audio.addEventListener('play', () => {
             this.paused = false;
         }); */
-        
+        this.Audio.addEventListener('ended', event => {
+
+            //console.log('Player: ended current -- ', JSON.parse(JSON.stringify(this.current)))
+
+            this.dispatchEvent(new CustomEvent('next', {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    id: this.current.id,
+                    parent: this.current.name,
+                }
+            }))
+        })
         
         this.metadata();
     }

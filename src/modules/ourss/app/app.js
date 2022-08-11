@@ -227,6 +227,18 @@ export default class App extends LightningElement {
         }
     }
 
+    next({detail}){
+        
+        const {
+            id,
+            parent,
+        } = detail;
+
+        const cast = this.casts.find(x => x.title === parent);
+        
+        this.template.querySelector('ui-playlist').next(id, cast.id);
+    }
+
     scroll(){
         this.dom.app.scrollIntoView({
             inline: 'start',
