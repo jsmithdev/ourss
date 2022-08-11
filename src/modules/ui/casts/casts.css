@@ -68,4 +68,7 @@ path.heart {
     width: -webkit-fill-available;
     height: -webkit-fill-available;
     border-radius: 5px;
+
+    /* stop FF img from breaking out */
+    width: -moz-available;
 }
