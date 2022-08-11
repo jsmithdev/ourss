@@ -1,7 +1,7 @@
 {
   "name": "ourss",
-  "version": "0.7.8",
-  "description": "Swank podcast app",
+  "version": "0.8.0",
+  "description": "Swank podcast pwa",
   "main": "index.js",
   "author": "Jamie Smith",
   "license": "UNLICENSED",
