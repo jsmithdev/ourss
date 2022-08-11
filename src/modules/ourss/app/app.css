@@ -121,14 +121,6 @@ img {
     max-width: 150px;
 }
 
-/* .grid {
-    display: grid;
-    grid-auto-rows: 10vh 80vh 10vh;
-}
-.grid-box {
-    place-items: center;
-} */
-
 .load-container {
     position: relative;
     z-index: 1000;
