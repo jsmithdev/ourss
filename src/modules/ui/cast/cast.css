@@ -9,6 +9,23 @@
     }
 }
 
+div.items {
+    user-select: none;
+    font-size: 0.8rem;
+    overflow: hidden overlay;
+    border-radius: 0px 0px 5px 5px;
+    margin: 0px 1.5rem;
+    max-width: 37rem;
+    width: -webkit-fill-available;
+}
+
+@media only screen and (max-width: 600px) {
+    div.items {
+        margin: 0px 0.5rem;
+    }
+    
+}
+
 div.container {
     user-select: none;
     display: grid;
@@ -39,15 +56,6 @@ img.card-img {
 }
 
 
-div.items {
-    user-select: none;
-    font-size: 0.8rem;
-    overflow: auto;
-    border-radius: 0px 0px 5px 5px;
-    margin: 0px 1.5rem;
-    max-width: 37rem;
-    width: -webkit-fill-available;
-}
 
 
 div.controls {
