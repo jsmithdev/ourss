@@ -13,7 +13,6 @@ import {
     getKeys,
     setItem,
     getItems,
-    getItemById,
     deleteItemById,
 } from '../../data/idb'
 
@@ -55,6 +54,7 @@ export default class App extends LightningElement {
         return {
             app: this.template.querySelector('.app'),
             main: this.template.querySelector('main'),
+            playlist: this.template.querySelector('ui-playlist'),
         }
     }
 
@@ -236,7 +236,7 @@ export default class App extends LightningElement {
 
         const cast = this.casts.find(x => x.title === parent);
         
-        this.template.querySelector('ui-playlist').next(id, cast.id);
+        this.dom.playlist.next(id, cast.id);
     }
 
     scroll(){
@@ -265,7 +265,7 @@ export default class App extends LightningElement {
      */
     loggedIn({detail}) {
 
-        console.log('App: user info ', detail.user)
+        //console.log('App: user info ', detail.user)
 
         this.user = detail.user;
         // if haven't already, check remote db
@@ -411,71 +411,20 @@ export default class App extends LightningElement {
     }
 
 
-    async queue({detail}){
+    queue({detail}){
 
         const {
             id,
             parentid,
         } = detail;
-
+        
         const parent = this.casts.find(x => x.id === parentid)
         
         const item = parent?.items.find(x => x.id === id)
 
         item.parentid = parentid;
-        
-        if(!item?.id){ return console.log('App: no items') }
-    
-        // never run if exists
-        if( !await this.getLocalBlob(item.id) ){
-            // get remote data, set local blob
-            this.setBlobByUrl(item);
-        }
-    }
 
-    /**
-     * get audio 
-     * @param {String} url 
-     * @returns {Blob} | undefined
-     */
-    async getLocalBlob(url){
-        return (await getItemById( url, 'audio'))?.blob;
-    }
-
-    async setBlobByUrl(item){
-        const audio = {
-            id: `${item.parentid};;;${item.id}`,
-            saved: new Date().getTime(),
-            blob: await this.getUrlBlob(item.id),
-        }
-
-        if(audio.blob) {
-            await setItem('audio', audio);
-            item.cached = true;
-            this.playlist = [...this.playlist, item];
-        }
-    }
-
-    /**
-     * get data from url in blob form
-     * @param {String} url 
-     * @returns Blob | undefined
-     */
-    async getUrlBlob(url){
-        try {
-            return (await fetch(url)).blob();
-        }
-        catch(e){
-            console.log(e)
-            console.log('Trying proxy')
-            try {
-                return (await fetch('https://ourrss-proxy.herokuapp.com/' + url)).blob();
-            }
-            catch(e){
-                console.log(e)
-                console.log('Proxy could retrieve either')
-            }
-        }
+        this.dom.playlist.queue( item )
     }
 
     /**

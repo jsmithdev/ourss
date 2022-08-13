@@ -4,41 +4,56 @@
         <div class="head">
             <text-neon
                 text="Playlist"
+                onclick={refresh}
             ></text-neon>
         </div>
             
         <div class="items">
+
             <template for:each={items} for:item="item">
                 <ui-list
                     key={item.id}
                     title={item.title}
                     date={item.date}
                     description={item.description}
+                    active={item.loading}
                 >
 
                     <span slot="footer">
-                        <div class="controls">
-                            <div>
-                                <svg 
-                                    onclick={remove}
-                                    data-id={item.id}
-                                    data-parentid={item.parentid}
-                                    class="remove" 
-                                    viewBox="0 0 24 24">
-                                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"></path>
-                                </svg>
+
+                        <template if:true={item.loading}>
+
+                            <ui-progress
+                                value={item.loaded}
+                                max={item.size}
+                            ></ui-progress>
+
+                        </template>
+
+                        <template if:false={item.loading}>
+                            <div class="controls">
+                                <div>
+                                    <svg 
+                                        onclick={remove}
+                                        data-id={item.id}
+                                        data-parentid={item.parentid}
+                                        class="remove" 
+                                        viewBox="0 0 24 24">
+                                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <svg 
+                                        onclick={play}
+                                        data-id={item.id}
+                                        data-parentid={item.parentid}
+                                        class="play" 
+                                        viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"></path>
+                                    </svg>
+                                </div>
                             </div>
-                            <div>
-                                <svg 
-                                    onclick={play}
-                                    data-id={item.id}
-                                    data-parentid={item.parentid}
-                                    class="play" 
-                                    viewBox="0 0 24 24">
-                                    <path d="M8 5v14l11-7z"></path>
-                                </svg>
-                            </div>
-                        </div>
+                        </template>
                     </span>
                 </ui-list>
                 

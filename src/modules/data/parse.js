@@ -38,8 +38,8 @@ async function proxy(url) {
 /**
  * 
  * @param {String} data rss/xml text from feed 
- * @param {*} url of feed
- * @param {*} id of feed; Optional, if not provided, will be generated
+ * @param {String} url of feed
+ * @param {String} id of feed; Optional, if not provided, will be generated
  * @returns {Object} structured object else undefined
  */
 export function parse (data, url, id = guid()) {

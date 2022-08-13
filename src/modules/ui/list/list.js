@@ -5,10 +5,15 @@ export default class Cast extends LightningElement {
     @api title = '';
     @api date = '';
     @api description = '';
+    @api active = false;
 
-    selectItem(event) {
-        console.log(event.currentTarget)
-        console.log(event.currentTarget.querySelector('.details'))
-        event.currentTarget.querySelector('.details')?.classList.toggle('hide')
+    renderedCallback(){
+        if(this.active){
+            this.selectItem()
+        }
+    }
+
+    selectItem() {
+        this.template.querySelector('.details')?.classList.toggle('hide')
     }
 }
