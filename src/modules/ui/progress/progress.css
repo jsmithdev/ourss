@@ -1,0 +1,41 @@
+
+.progress {
+    /*margin-top: -20px; */
+    height: 20px;
+    width: 100%;
+    white-space: nowrap;
+    display: inline-flex;
+    /* cursor: pointer; */
+    /* position: relative; */
+    border: 1pt solid var(--color-accent);
+    appearance: none;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    z-index: 1;
+    outline: none;
+    flex: 1 1 auto;
+    /* text-transform: uppercase; */
+    transition: all 0.5s ease 0s;
+    box-shadow: rgb(238 238 238) 5px 0px 9px;
+    color: white;
+    background-image: linear-gradient(to right, var(--color-accent) 0%, var(--color-accent) 0%, var(--color-secondary) 100%);
+    background-position: right center;
+    background-size: 125%;
+    justify-content: space-between;
+}
+.progressAmount {
+    white-space: nowrap;
+    display: block;
+    height: 100%;
+    width: 0px;
+    line-height: 1.5rem;
+    border-right: 2pt solid var(--color-light);
+}
+.currentTime {
+    padding-left: .5rem;
+}
+.duration {
+    line-height: 1.5rem;
+    padding-right: .5rem;
+}
