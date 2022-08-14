@@ -77,7 +77,7 @@ export default class Settings extends LightningElement {
     async clearAll() {
         
         if(!confirm(`Are you sure you want delete all data?`)) return;
-
+        localStorage.setItem('lastRemotePull', 0)
         await clearStore('casts')
         await clearStore('audio')
         console.info('Cache cleared')
