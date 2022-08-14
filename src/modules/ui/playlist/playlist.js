@@ -112,14 +112,9 @@ export default class Cast extends LightningElement {
 
         if (!id || !parentid) { return undefined }
 
-        this.dispatchEvent(new CustomEvent('remove', {
-            bubbles: true,
-            composed: true,
-            detail: {
-                id: parentid + ';;;' + id,
-                store: 'audio',
-            },
-        }));
+        this.items = this.items.filter(x => x.id !== id);
+
+        deleteItemById('audio', parentid + ';;;' + id);
     }
 
 
