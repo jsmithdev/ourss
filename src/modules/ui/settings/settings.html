@@ -29,7 +29,7 @@
         <br />
 
         <div class="heading">
-            Play random episodes like a radio
+            Continuously play random episodes like a radio
         </div>
         <ui-button
             label="Play Radio"
@@ -44,6 +44,13 @@
             </span>
         </ui-button>
         
+        <div class="heading">
+            Delete all stored podcasts from this device
+        </div>
+        <ui-button
+            label="Clear Cache"
+            onclick={clearCache}
+        ></ui-button>
 
         <div class="foot">
             {version}

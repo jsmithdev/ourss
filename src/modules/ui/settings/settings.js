@@ -1,5 +1,9 @@
 import { api, LightningElement } from 'lwc';
 
+import {
+    clearStore,
+} from '../../data/idb';
+
 export default class Settings extends LightningElement {
 
     showSignIn = false;
@@ -59,5 +63,14 @@ export default class Settings extends LightningElement {
             bubbles: true,
             composed: true,
         }));
+    }
+
+    async clearCache() {
+        
+        if(!confirm(`Are you sure you want delete all downloads?`)) return;
+
+        //await clearStore('casts')
+        await clearStore('audio')
+        console.info('Cache cleared')
     }
 }
