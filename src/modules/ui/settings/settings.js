@@ -73,4 +73,13 @@ export default class Settings extends LightningElement {
         await clearStore('audio')
         console.info('Cache cleared')
     }
+
+    async clearAll() {
+        
+        if(!confirm(`Are you sure you want delete all data?`)) return;
+
+        await clearStore('casts')
+        await clearStore('audio')
+        console.info('Cache cleared')
+    }
 }
