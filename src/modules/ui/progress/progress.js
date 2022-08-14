@@ -6,6 +6,8 @@ export default class Progress extends LightningElement {
     percent = 0;
     percentage = '0Mb';
 
+    @api type = 'item'; // item || bar
+
     @api max = 0;
 
     @api 
@@ -18,6 +20,10 @@ export default class Progress extends LightningElement {
         }
     }
 
+    get isBar(){
+        return this.type === 'bar';
+    }
+
     get length(){
         return this.toGroup( this.max.toFixed() )
     }
@@ -26,6 +32,7 @@ export default class Progress extends LightningElement {
         return {
             progress: this.template.querySelector('.progress'),
             progressAmount: this.template.querySelector('.progressAmount'),
+            item: this.template.querySelector('.item'),
         }
     }
 
@@ -40,8 +47,13 @@ export default class Progress extends LightningElement {
 
 
     updateDom(){
-        this.dom.progressAmount.style.width = `${this.percent}%`
-        this.dom.progress.style.backgroundImage = `linear-gradient(to right, var(--color-accent) 0%, var(--color-accent) ${this.percent}%, var(--color-secondary) 100%)`
+        if(this.isBar){
+            this.dom.progressAmount.style.width = `${this.percent}%`
+            this.dom.progress.style.backgroundImage = `linear-gradient(to right, var(--color-accent) 0%, var(--color-accent) ${this.percent}%, var(--color-dark) 100%)`
+        }
+        else {
+            this.dom.item.style.backgroundImage = `linear-gradient(to right, var(--color-accent) ${this.percent}%, var(--color-dark) 100%)`
+        }
     }
 
     toGroup(n){

@@ -39,3 +39,32 @@
     line-height: 1.5rem;
     padding-right: .5rem;
 }
+
+
+/* item style */
+div.item {
+    transition: all 0.25s ease-in-out 0s;
+    font-size: 1rem;
+    margin: .5rem 0rem;
+    padding: 1rem 0rem;
+    vertical-align: middle;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    /* border-bottom: 1pt solid var(--color-primary); */
+    border-bottom: 1pt solid #0000008a;
+    user-select: none;
+    background: rgb(0 0 0 / 10%);
+    border-radius: 5px;
+    background-position: center center;
+    background-size: 100%;
+    justify-content: space-between;
+}
+div.heading {
+    text-align: left;
+    padding-left: 1rem;
+}
+span.title {
+    font-size: 1.2rem;
+    cursor: pointer;
+}

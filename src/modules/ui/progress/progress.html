@@ -1,13 +1,27 @@
 <template>
 
-    <div class="progress">
-
-        <span class="progressAmount">
-            <span class="currentTime">{ratio}</span>
-        </span>
+    <template if:false={isBar}>
         
-        <span class="duration">{percent}%</span>
-    
-    </div>
+        <div class="item">
+
+            <div class="heading">
+                <span class="title">{title}</span>
+            </div>
+
+            <div class="percent">{percent}%</div>
+        </div>
+    </template>
+
+    <template if:true={isBar}>
+        <div class="progress">
+
+            <span class="progressAmount">
+                <span class="currentTime">{ratio}</span>
+            </span>
+            
+            <span class="duration">{percent}%</span>
+        
+        </div>
+    </template>
 
 </template>
