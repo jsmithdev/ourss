@@ -15,9 +15,9 @@ export default class Cast extends LightningElement {
 
     @api next(prevId, prevParent) {
         
-        //console.log('Playlist: next call - ', prevId, ' -- ', prevParent);
+        console.log('Playlist: next call - ', prevId, ' -- ', prevParent);
         
-        if(prevId & prevParent){
+        if(prevId && prevParent){
             // remove prev
             this.remove({
                 currentTarget: {
@@ -29,6 +29,8 @@ export default class Cast extends LightningElement {
             });
         }
 
+        console.log('Playlist: has items? - ', this.items.length);
+
         // get next thats not the prev
         if(this.items.length){
 
@@ -36,8 +38,10 @@ export default class Cast extends LightningElement {
                 id,
                 parentid,
             } = this.items.find(x => x.id !== prevId);
-    
-            if(id & parentid){
+
+            console.log('Playlist: play next - ', id, ' -- ', parentid);
+
+            if(id && parentid){
                 // play next
                 this.play({
                     currentTarget: {
@@ -50,6 +54,8 @@ export default class Cast extends LightningElement {
             }   
         }
         else {
+
+            console.log('Playlist: playing radio');
 
             this.dispatchEvent(new CustomEvent('radio', {
                 bubbles: true,
@@ -114,7 +120,7 @@ export default class Cast extends LightningElement {
 
         this.items = this.items.filter(x => x.id !== id);
 
-        deleteItemById('audio', parentid + ';;;' + id);
+        //deleteItemById('audio', parentid + ';;;' + id);
     }
 
 
