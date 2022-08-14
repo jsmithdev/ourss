@@ -5,6 +5,7 @@ import {
     setItem,
     getItems,
     getItemById,
+    getItemsByKeys,
     deleteItemById,
 } from '../../data/idb';
 
@@ -41,12 +42,26 @@ export default class Cast extends LightningElement {
         })
     }
 
-    refresh() {
+    @api
+    async queue(item) {
 
-        this.dispatchEvent(new CustomEvent('refresh', {
-            bubbles: true,
-            composed: true,
-        }));
+        if (!item?.id) { return console.log('App: no items') }
+
+        item.loading = true;
+        item.loaded = 0;
+        item.size = 0;
+
+        this.items = [...this.items, item]
+
+        // never run if exists
+        if (!await this.getLocalBlob(item.id)) {
+            // get remote data, set local blob
+            this.setBlobByUrl(item);
+        }
+    }
+
+    connectedCallback(){
+        this.load()
     }
 
     play(event) {
@@ -91,32 +106,6 @@ export default class Cast extends LightningElement {
         }));
     }
 
-
-
-
-
-
-
-
-
-
-    @api
-    async queue(item) {
-
-        if (!item?.id) { return console.log('App: no items') }
-
-        item.loading = true;
-        item.loaded = 0;
-        item.size = 0;
-
-        this.items = [...this.items, item]
-
-        // never run if exists
-        if (!await this.getLocalBlob(item.id)) {
-            // get remote data, set local blob
-            this.setBlobByUrl(item);
-        }
-    }
 
     /**
      * get audio 
@@ -197,8 +186,8 @@ export default class Cast extends LightningElement {
         }
         catch (error) {
 
-
             try {
+                
                 const response = await fetch('https://ourrss-proxy.herokuapp.com/' + url);
 
                 const reader = response.body.getReader();
@@ -254,4 +243,30 @@ export default class Cast extends LightningElement {
         }
     }
 
+
+    /**
+     * check index db for cache and set playlist array
+     * @returns {Array}
+     */
+    async load(){
+        console.log('Playlist: loading ')
+
+        const keys = await getKeys('audio');
+
+        const parentIds = keys.map(k => k.substring(0, k.indexOf(';;;')))
+
+        const casts = await getItemsByKeys('casts', parentIds)
+
+        this.items = keys.reduce((acc, k) => {
+
+            const parentid = k.substring(0, k.indexOf(';;;'));
+            const id = k.substring(k.indexOf(';;;')+3, k.length)
+            const c = casts.find(c => c.id === parentid);
+            const i = c.items.find(i => i.id === id);
+
+            //console.log('App: loading i ',  JSON.parse(JSON.stringify(i)))
+
+            return [...acc, i];
+        }, []);
+    }
 }
