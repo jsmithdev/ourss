@@ -126,7 +126,7 @@ export default class Player extends LightningElement {
                 bubbles: true,
                 composed: true,
                 detail: {
-                    id: this.current.id,
+                    id: this.current.src,
                     parent: this.current.name,
                 }
             }))
