@@ -71,9 +71,13 @@ export async function setItem(store, item) {
 /**
  * Get all items from the database store
  * @param {String} store name of database store to get all from
+ * @param {String} orderBy field to order by
  * @returns {Promise} resolves  array of items
  */
-export async function getItems(store) {
+export async function getItems(store, orderBy) {
+	
+	if(orderBy) return (await DB).getAllFromIndex(store, orderBy);
+	
 	return (await DB).getAll(store);
 }
 
@@ -94,3 +98,23 @@ export async function getKeys(store) {
 export async function checkBaseExists(store) {
 	return (await window.indexedDB.databases()).map(db => db.name).includes(store);
 } // @param {Boolean} create Optional; create the store if it doesn't exist
+
+/**
+ * Ensure the database store exists
+ * @param {String} store name of database store to get all from
+ * @returns {Promise} resolves  array of items
+ */
+export async function getItemsByKeys(store, keys) {
+	
+	let cursor = await (await DB).transaction(store).store.openCursor();
+	let items = []
+
+	while (cursor) {
+		if(keys.includes(cursor.key)){
+			items = [...items, cursor.value]
+		}
+		cursor = await cursor.continue();
+	}
+
+	return items;
+}
