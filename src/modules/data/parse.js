@@ -78,6 +78,7 @@ export function parse (data, url, id = guid()) {
         const obj = {
             get id(){ return this.src },
             get src(){ return this.enclosures.find(x => x.url)?.url },
+            parentid: id,
             title: val.title && val.title.$text ? val.title.$text : val.title,
             description: desc,
             link: val.link && val.link.href ? val.link.href : val.link,
