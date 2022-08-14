@@ -7,30 +7,30 @@
                 onclick={load}
             ></text-neon>
         </div>
-            
+
         <div class="items">
 
             <template for:each={items} for:item="item">
-                <ui-list
-                    key={item.id}
-                    title={item.title}
-                    date={item.date}
-                    description={item.description}
-                    active={item.loading}
-                >
 
-                    <span slot="footer">
+                <template if:true={item.loading}>
+                    <ui-progress
+                        key={item.id}
+                        title={item.title}
+                        value={item.loaded}
+                        max={item.size}
+                    ></ui-progress>
+                </template>
 
-                        <template if:true={item.loading}>
+                <template if:false={item.loading}>
+                    <ui-list
+                        key={item.id}
+                        title={item.title}
+                        date={item.date}
+                        description={item.description}
+                    >
 
-                            <ui-progress
-                                value={item.loaded}
-                                max={item.size}
-                            ></ui-progress>
+                        <span slot="footer">
 
-                        </template>
-
-                        <template if:false={item.loading}>
                             <div class="controls">
                                 <div>
                                     <svg 
@@ -53,9 +53,10 @@
                                     </svg>
                                 </div>
                             </div>
-                        </template>
-                    </span>
-                </ui-list>
+                        </span>
+                    </ui-list>
+                </template>
+                
                 
             </template>
         </div>
