@@ -1,4 +1,4 @@
-import { openDB } from 'idb';
+import { openDB, deleteDB } from 'idb';
 
 const DB_NAME = 'ourss'
 const VERSION = 2
@@ -100,9 +100,10 @@ export async function checkBaseExists(store) {
 } // @param {Boolean} create Optional; create the store if it doesn't exist
 
 /**
- * Ensure the database store exists
+ * Get array of items via keys
  * @param {String} store name of database store to get all from
- * @returns {Promise} resolves  array of items
+ * @param {Array} keys array of keys to match
+ * @returns {Promise} resolves an array of items
  */
 export async function getItemsByKeys(store, keys) {
 	
@@ -117,4 +118,13 @@ export async function getItemsByKeys(store, keys) {
 	}
 
 	return items;
+}
+
+/**
+ * Clear a store's data
+ * @param {String} store name of database store to get all from
+ * @returns {Promise} resolves  array of items
+ */
+export async function clearStore(store) {
+	return (await DB).clear(store);
 }
