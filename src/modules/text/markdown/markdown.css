@@ -2,6 +2,7 @@
 pre {
   white-space: pre-line;
   font-family: inherit;
+  word-break: break-all;
 }
 
 /**
@@ -83,7 +84,9 @@ layer {
 article, aside, footer, header, hgroup, main, nav, section {
     display: block;
 }
-
+a {
+  color: var(--color-accent)
+}
 
 
 
