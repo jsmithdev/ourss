@@ -147,8 +147,6 @@ export default class App extends LightningElement {
 
         const callback = () => {
             radio.pause()
-            //this.togglePlay()
-            //this.Audio.addEventListener('ended', () => this.radio())
         }
 
         const feed = this.casts[Math.floor(Math.random() * this.casts.length) + 0]
