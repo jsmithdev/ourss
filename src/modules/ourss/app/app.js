@@ -37,20 +37,18 @@ export default class App extends LightningElement {
     selected = {}
     favorites = []
 
-    playlist = [];
+    constructor() {
+        super();
+        this.worker = new Worker(new URL('./../../workers/data.js', import.meta.url));
+        this.worker.addEventListener('message', event =>
+            this.processed(event));
+    }
 
-	constructor() {
-		super();
-		this.worker = new Worker(new URL('./../../workers/data.js', import.meta.url));
-		this.worker.addEventListener( 'message', event => 
-            this.processed( event ) );
-	}
-
-    get hasDetails(){
+    get hasDetails() {
         return Object.keys(this.selected).length
     }
 
-    get dom(){
+    get dom() {
         return {
             app: this.template.querySelector('.app'),
             main: this.template.querySelector('main'),
@@ -59,41 +57,41 @@ export default class App extends LightningElement {
     }
 
 
-    async connectedCallback () {
+    async connectedCallback() {
         this.startLoading();
     }
 
     renderedCallback() {
-        if(!this._init){
+        if (!this._init) {
             this._init = true;
             this.onkeyup = this.hotkeys;
             //gestureListeners.bind(this).call();
         }
     }
-    
-    view(str){
-        if(str === 'casts'){
+
+    view(str) {
+        if (str === 'casts') {
             this.dom.main.scrollTo(0, 0)
         }
-        else if(str === 'details'){
+        else if (str === 'details') {
             this.dom.main.scrollTo(this.dom.main.scrollWidth / 3, 0)
         }
-        else if(str === 'settings'){
+        else if (str === 'settings') {
             this.dom.main.scrollTo(this.dom.main.scrollWidth / 1, 0)
         }
-        else if(str === 'playlist'){
+        else if (str === 'playlist') {
             this.current?.id
-            ? this.dom.main.scrollTo(this.dom.main.scrollWidth / 2, 0)
-            : this.dom.main.scrollTo(this.dom.main.scrollWidth / 3, 0);
+                ? this.dom.main.scrollTo(this.dom.main.scrollWidth / 2, 0)
+                : this.dom.main.scrollTo(this.dom.main.scrollWidth / 3, 0);
         }
     }
-    navigate({detail}){
-        
-        const {view, value} = detail;
+    navigate({ detail }) {
+
+        const { view, value } = detail;
 
         console.log('App: v/v ', view, value)
 
-        if(value === undefined || value === true){
+        if (value === undefined || value === true) {
             this.view(view)
         }
         else {
@@ -102,7 +100,7 @@ export default class App extends LightningElement {
         this._view_prev = view || defaults.view;
     }
 
-    setCurrent({detail}){
+    setCurrent({ detail }) {
 
         const {
             id,
@@ -112,21 +110,21 @@ export default class App extends LightningElement {
         const parent = this.casts.find(x => x.id === parentid)
 
         //console.log('App: setCurrent: ', id, parentid, parent)
-        
-        const item = parent?.items.find(x => x.id === id) 
 
-        if(!item){ return console.log('App: no items') }
+        const item = parent?.items.find(x => x.id === id)
+
+        if (!item) { return console.log('App: no items') }
 
         this.current = Object.assign({
             name: parent.title,
             image: parent.image,
         }, item);
-        
+
         //console.log(this.current)
     }
 
-    async addCast({detail}){
-        const {url, id} = detail;
+    async addCast({ detail }) {
+        const { url, id } = detail;
         //console.log('addCast ', url)
         this.casts = [...this.casts, (await addCast(url, id))]
         //console.log({
@@ -134,14 +132,14 @@ export default class App extends LightningElement {
         //})
     }
 
-    hotkeys(event){
+    hotkeys(event) {
         //console.log('hotkeys ', event.key)
-        const {key} = event;
+        const { key } = event;
 
-        if(key === 'Space') console.log('space');
+        if (key === 'Space') console.log('space');
     }
 
-    radio(){
+    radio() {
 
         const radio = new Audio(`/resources/radio.mp3`)
         radio.loop = true
@@ -155,7 +153,7 @@ export default class App extends LightningElement {
 
         const feed = this.casts[Math.floor(Math.random() * this.casts.length) + 0]
         const cast = feed.items[Math.floor(Math.random() * feed.items.length) + 0]
-        
+
         this.setCurrent({
             detail: {
                 id: cast.id,
@@ -164,24 +162,24 @@ export default class App extends LightningElement {
         });
         setTimeout(() => callback(), 1000)
     }
-    
-    messenger({detail}){
+
+    messenger({ detail }) {
         this.message = detail.message;
     }
 
-    async refresh({detail}){
+    async refresh({ detail }) {
 
-        const {feed, id, callback} = detail;
+        const { feed, id, callback } = detail;
 
         const cast = await updateCast(feed, id)
 
         this.updateSortCast(cast)
 
-        if(callback) callback(cast);
+        if (callback) callback(cast);
     }
-    async favorite({detail}){
+    async favorite({ detail }) {
 
-        const {cast} = detail;
+        const { cast } = detail;
         console.log('App: favorite ', cast)
 
         // update local db
@@ -189,7 +187,7 @@ export default class App extends LightningElement {
         setItem('casts', cast);
 
         this.updateSortCast(cast)
-        
+
         // add to favorites
         this.favorites = [...this.favorites, cast.id]
 
@@ -198,48 +196,48 @@ export default class App extends LightningElement {
             favorites: this.favorites,
         }
 
-        if(!this.user.uid) return console.warn('no user');
+        if (!this.user.uid) return console.warn('no user');
 
         // update remote db
         const res = await setRemoteDb('users', user)
 
         console.info('App: favorite results: ', res)
-        
 
-        if(detail.cb) detail.cb();
+
+        if (detail.cb) detail.cb();
     }
 
-    remove({detail}){
-        
+    remove({ detail }) {
+
         const {
             id,
             store,
         } = detail;
-        
-        deleteItemById( store, id );
 
-        if(store === 'audio'){
-            const uid = id.substring(id.indexOf(';;;')+3, id.length);
+        deleteItemById(store, id);
+
+        if (store === 'audio') {
+            const uid = id.substring(id.indexOf(';;;') + 3, id.length);
             this.playlist = this.playlist.filter(x => x.id !== uid);
         }
-        else if(store === 'casts'){
+        else if (store === 'casts') {
             this.casts = this.casts.filter(x => x.id !== id);
         }
     }
 
-    next({detail}){
-        
+    next({ detail }) {
+
         const {
             id,
             parent,
         } = detail;
 
         const cast = this.casts.find(x => x.title === parent);
-        
+
         this.dom.playlist.next(id, cast.id);
     }
 
-    scroll(){
+    scroll() {
         this.dom.app.scrollIntoView({
             inline: 'start',
             block: 'start',
@@ -247,7 +245,7 @@ export default class App extends LightningElement {
         })
     }
 
-    auth(){
+    auth() {
         this.showAuth = true;
     }
 
@@ -263,13 +261,13 @@ export default class App extends LightningElement {
      * ran when a user has logged in
      * @param {Event} event object which has the user as a detail
      */
-    loggedIn({detail}) {
+    loggedIn({ detail }) {
 
         //console.log('App: user info ', detail.user)
 
         this.user = detail.user;
         // if haven't already, check remote db
-        if(!this.remoteDbChecked){
+        if (!this.remoteDbChecked) {
             this.checkRemoteDb();
         }
     }
@@ -278,7 +276,7 @@ export default class App extends LightningElement {
      * used to set & show details of a cast
      * @param {Event} event object which has the cast as a detail
      */
-    showDetail({detail}) {
+    showDetail({ detail }) {
         this.selected = detail;
         setTimeout(() => this.view('details'), 0)
     }
@@ -287,11 +285,11 @@ export default class App extends LightningElement {
      * starts process to load from local db
      * if no local db, show a couple of defaults
      */
-    async startLoading(){
+    async startLoading() {
 
-        const casts = await getItems('casts')
+        const casts = await getItems('casts')//, 'date'
 
-        if(!casts.length){
+        if (!casts.length) {
             defaults.feeds.map(async url => {
                 this.worker.postMessage({
                     url,
@@ -312,12 +310,10 @@ export default class App extends LightningElement {
 
         this.isLoading = false;
 
-        this.loadPlaylist()
-
-        if(!this.remoteDbChecked){
+        if (!this.remoteDbChecked) {
             this.checkRemoteDb();
         }
-        
+
         return true;
     }
 
@@ -325,14 +321,14 @@ export default class App extends LightningElement {
      * check remote db for feeds
      * @returns undefined
      */
-    async checkRemoteDb(){
+    async checkRemoteDb() {
         console.log('App: checking remote db')
         this.remoteDbChecked = true;
-        
+
         // only run if it's been over an hour
         const lastRun = localStorage.lastRemotePull;
-        if(lastRun){
-            if(!hasBeenHour(lastRun)){
+        if (lastRun) {
+            if (!hasBeenHour(lastRun)) {
                 console.log('App: last remote pull was less than an hour ago')
                 return;
             }
@@ -342,10 +338,10 @@ export default class App extends LightningElement {
         const urls = this.casts.map(x => x.feed)
         const remoteDb = await getRemoteDb('casts');
         const newFeeds = remoteDb.filter(x => !urls.includes(x.url))
-        if(newFeeds.length){
+        if (newFeeds.length) {
             console.log('App: new feeds: ', newFeeds)
             newFeeds.map(async data => {
-                const {id, url} = data;
+                const { id, url } = data;
                 this.worker.postMessage({
                     id,
                     url,
@@ -360,30 +356,30 @@ export default class App extends LightningElement {
      * ran when the data web worker sends a message
      * @param {MessageEvent} event sent back from web worker
      */
-    async processed(event){
+    async processed(event) {
 
-        const {data, store, whoami} = event.data;
+        const { data, store, whoami } = event.data;
 
         console.log('PROCESSED by: ', whoami)
         console.log(event)
-        if(whoami === 'worker-parser'){
-            if(store && data){
+        if (whoami === 'worker-parser') {
+            if (store && data) {
                 setItem('casts', data)
             }
-            if(data){
+            if (data) {
                 this.updateSortCast(data)
             }
         }
     }
 
-    updateSortCast(cast){
-        if(!cast) return;
-        
+    updateSortCast(cast) {
+        if (!cast) return;
+
         const { id } = cast;
         const faves = this.casts.filter(c => c.fav && c.id !== id)
         const others = this.casts.filter(c => !c.fav && c.id !== id)
 
-        if(cast.fav){
+        if (cast.fav) {
             this.casts = [
                 cast,
                 ...faves,
@@ -399,7 +395,7 @@ export default class App extends LightningElement {
         }
     }
 
-    updateSortCasts(casts){
+    updateSortCasts(casts) {
 
         const faves = casts.filter(c => c.fav)
         const others = casts.filter(c => !c.fav)
@@ -411,44 +407,19 @@ export default class App extends LightningElement {
     }
 
 
-    queue({detail}){
+    queue({ detail }) {
 
         const {
             id,
             parentid,
         } = detail;
-        
+
         const parent = this.casts.find(x => x.id === parentid)
-        
+
         const item = parent?.items.find(x => x.id === id)
 
         item.parentid = parentid;
 
-        this.dom.playlist.queue( item )
-    }
-
-    /**
-     * check index db for cache and set playlist array
-     * @returns {Array}
-     */
-    async loadPlaylist(){
-        console.log('App: loading playlist')
-
-        const keys = await getKeys('audio');
-
-        const test = keys.reduce((acc, k) => {
-
-            const pid = k.substring(0, k.indexOf(';;;'));
-            const id = k.substring(k.indexOf(';;;')+3, k.length)
-            const c = this.casts.find(c => c.id === pid);
-            const i = c.items.find(i => i.id === id);
-            i.parentid = c.id;
-
-            //console.log('App: loading i ',  JSON.parse(JSON.stringify(i)))
-
-            return [...acc, i];
-        }, []);
-
-        this.playlist = test
+        this.dom.playlist.queue(item)
     }
 }
