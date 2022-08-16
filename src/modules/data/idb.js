@@ -45,7 +45,7 @@ const DB = openDB(DB_NAME, VERSION, {
  * @param {String} uid 
  * @returns {Promise<Object>} single item from store
  */
-export async function getItemById(uid, store = 'casts') {
+export async function getItemById(store, uid) {
 	return (await DB).get(store, uid);}
 
 /**

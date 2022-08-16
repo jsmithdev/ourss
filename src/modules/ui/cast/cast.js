@@ -1,8 +1,5 @@
 import { track, api, LightningElement } from 'lwc';
 
-//import {
-//    getItemById,
-//} from '../../data/idb';
 
 export default class Cast extends LightningElement {
 

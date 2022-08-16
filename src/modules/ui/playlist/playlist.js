@@ -120,7 +120,7 @@ export default class Cast extends LightningElement {
 
         this.items = this.items.filter(x => x.id !== id);
 
-        //deleteItemById('audio', parentid + ';;;' + id);
+        deleteItemById('audio', parentid + ';;;' + id);
     }
 
 
@@ -130,7 +130,7 @@ export default class Cast extends LightningElement {
      * @returns {Blob} | undefined
      */
     async getLocalBlob(url) {
-        return (await getItemById(url, 'audio'))?.blob;
+        return (await getItemById( 'audio', url ))?.blob;
     }
 
     async setBlobByUrl(item) {

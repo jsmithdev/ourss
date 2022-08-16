@@ -22,7 +22,7 @@ export default class Casts extends LightningElement {
         const {id} = event.target.dataset;
 
         //this.selected = this.casts.find(x => x.id === id)
-        this.selected = await getItemById(id)
+        this.selected = await getItemById('casts', id)
         
         this.lastTarget = id;
 
