@@ -11,9 +11,7 @@ export default class Player extends LightningElement {
     paused = true;
     currentTime = 0;
 
-    Audio = {
-        currentTime: 0,
-    }
+    Audio = {}
 
     @api
     get current(){
@@ -24,9 +22,10 @@ export default class Player extends LightningElement {
         const isNew = (this._current?.id !== item?.id);
 
         if(item?.name){
+            //console.log(JSON.parse(JSON.stringify(item)))
             this._current = item;
             this.newAudio({
-                autoplay: (isNew || localStorage.src !== item.src),
+                autoplay: this.autoplay || (isNew || localStorage.src !== item.src),
             });
         }
     }
@@ -46,8 +45,14 @@ export default class Player extends LightningElement {
         }));
     }
 
+    get uid() {
+        return this.parentId ? this.parentId + ';;;' + this.src : localStorage.uid;
+    }
     get src() {
-        return this.current?.src || this.current.src || localStorage.src || '';
+        return this.current?.src || localStorage.src || '';
+    }
+    get parentId() {
+        return this.current?.parentid || localStorage.parentid || '';
     }
     get currentImage() {
         return this.current?.itunes_image?.href || this.current.image;
@@ -81,17 +86,26 @@ export default class Player extends LightningElement {
             src: localStorage.src,
             time: localStorage.time,
             title: localStorage.title,
+            uid: localStorage.uid,
+            cached: localStorage.cached,
         }
         
         this.current = store;
     }
 
     async newAudio(options = {}) {
-        console.log('Player: setting new audio', options)
+
         
         if(typeof this.Audio.pause === 'function') this.Audio.pause();
 
-        const blob = await this.getLocalBlob(this.src);
+        //console.log('Player: Id', this.uid)
+
+        const blob = await this.getLocalBlob(this.uid);
+
+        console.log('Player: setting new audio using', 
+            blob ? 'Blob' : 'Url',
+            options
+        );
 
         this.Audio = new Audio( blob ? URL.createObjectURL(blob) : this.src);
 
@@ -189,8 +203,10 @@ export default class Player extends LightningElement {
     
     renderedCallback() {
 
-        if(!this._init){
-            this._init = true;
+        if(!this.init){
+            this.init = true;
+
+            this.Audio = this.template.querySelector('audio')
             
             this.loadPrevious();
 
@@ -224,6 +240,8 @@ export default class Player extends LightningElement {
         localStorage.src = this.src
         localStorage.title = this.title
         localStorage.name = this.name
+        localStorage.cached = true
+        localStorage.uid = this.uid
 
         navigator.mediaSession.metadata = new MediaMetadata({
             title: this.title,
@@ -360,6 +378,6 @@ export default class Player extends LightningElement {
      * @returns {Blob} | undefined
      */
     async getLocalBlob(url){
-        return (await getItemById( url, 'audio'))?.blob;
+        return (await getItemById( 'audio', url ))?.blob;
     }
 }
