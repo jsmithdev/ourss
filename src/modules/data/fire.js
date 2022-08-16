@@ -36,7 +36,7 @@ const provider = new GoogleAuthProvider();
 
 
 export function onAuthStateChanged(cb) {
-    console.log('onAuthStateChanged');
+    //console.log('onAuthStateChanged');
     auth.onAuthStateChanged(cb);
 }
 
