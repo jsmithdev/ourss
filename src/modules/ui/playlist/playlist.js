@@ -11,7 +11,7 @@ import {
 
 export default class Cast extends LightningElement {
 
-    @api items = [];
+    items = [];
 
     @api next(prevId, prevParent) {
         
@@ -67,7 +67,7 @@ export default class Cast extends LightningElement {
     @api
     async queue(item) {
 
-        if (!item?.id) { return console.log('App: no items') }
+        if (!item?.id) { return console.log('Playlist: no items') }
 
         item.loading = true;
         item.loaded = 0;
