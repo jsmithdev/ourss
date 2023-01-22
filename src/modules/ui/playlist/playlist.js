@@ -9,6 +9,8 @@ import {
     deleteItemById,
 } from '../../data/idb';
 
+const proxyUrl = 'https://web-production-8950.up.railway.app'
+
 export default class Cast extends LightningElement {
 
     items = [];
@@ -116,7 +118,7 @@ export default class Cast extends LightningElement {
 
         console.log('Playlist: remove item ', id, ' of ', parentid)
 
-        if (!id || !parentid) { return undefined }
+        if (!id || !parentid) return undefined;
 
         this.items = this.items.filter(x => x.id !== id);
 
@@ -154,31 +156,22 @@ export default class Cast extends LightningElement {
      */
     async getUrlBlob(url) {
         try {
-            //return (await fetch(url)).blob();
-            return this.progressFetch(url);
+            const item = this.items.find(x => x.id === url)
+            const response = await saferFetch(url)
+            console.log(response)
+            return this.trackProgress( response, item );
         }
         catch (e) {
-            //console.log(e)
-            console.info('Trying proxy')
-            try {
-                return this.progressFetch('https://ourrss-proxy.herokuapp.com/' + url);
-            }
-            catch (e) {
-                console.info('Proxy could retrieve either')
-                console.error(e)
-            }
+            console.info('Browser and Proxy could not retrieve')
+            console.error(e)
         }
     }
 
-    async progressFetch(url) {
-
-        const item = this.items.find(x => x.id === url)
+    async trackProgress(response, item) {
 
         try {
 
-            const response = await fetch(url);
-
-            const reader = response.body.getReader();
+            const reader = response.body.getReader()
 
             // Step 2: get total length
             item.size = Number(response.headers.get('Content-Length'));
@@ -202,62 +195,9 @@ export default class Cast extends LightningElement {
             return new Blob(chunks);
         }
         catch (error) {
-
-            try {
-                
-                const response = await fetch('https://ourrss-proxy.herokuapp.com/' + url);
-
-                const reader = response.body.getReader();
-
-                // Step 2: get total length
-                item.size = Number(response.headers.get('Content-Length'));
-
-                // Step 3: read the data
-                item.loaded = 0; // received that many bytes at the moment
-                const chunks = []; // array of received binary chunks (comprises the body)
-                while (true) {
-                    const { done, value } = await reader.read();
-
-                    if (done) {
-                        break;
-                    }
-
-                    chunks.push(value);
-                    item.loaded += value.length;
-
-                    //console.log(`Received ${item.loaded} of ${item.size}`)
-                }
-
-                return new Blob(chunks);
-            }
-            catch (error) {
-                console.info(error)
-            }
+            console.info(error)
         }
 
-    }
-
-    /**
-   * get data from url in blob form
-   * @param {String} url 
-   * @returns Blob | undefined
-   */
-    async saferFetch(url) {
-        try {
-            //return (await fetch(url)).blob();
-            return fetch(url);
-        }
-        catch (e) {
-            //console.log(e)
-            console.info('Trying proxy')
-            try {
-                return fetch('https://ourrss-proxy.herokuapp.com/' + url);
-            }
-            catch (e) {
-                console.info('Proxy could retrieve either')
-                console.error(e)
-            }
-        }
     }
 
 
@@ -279,11 +219,53 @@ export default class Cast extends LightningElement {
             const parentid = k.substring(0, k.indexOf(';;;'));
             const id = k.substring(k.indexOf(';;;')+3, k.length)
             const c = casts.find(c => c.id === parentid);
-            const i = c.items.find(i => i.id === id);
+            const i = c?.items?.find(i => i.id === id);
 
             //console.log('App: loading i ',  JSON.parse(JSON.stringify(i)))
 
-            return [...acc, i];
+            if(i) return [...acc, i];
+
+            return acc;
         }, []);
     }
+
+    
+}
+
+
+/**
+ * parse url and return structured object
+ * @param {String} url of feed to parse
+ * @param {String} id of feed; Optional, if not provided, will be generated
+ * @returns {Object} structured object else undefined
+ */
+ export async function saferFetch(url, id) {
+    try {
+        console.log('saferFetch: Fetching feed')
+        const res = await fetch(url)
+        return res; 
+    } catch (error) {
+        console.warn(error)
+        console.log('saferFetch: Feed failed, trying again...')
+        try {
+            const res = await proxy(url)
+            return res; 
+        } catch (er) {
+            console.warn(er)
+            console.info('Fallback failed. Can\'t parse the url ', url)
+        }
+    }
+    
+    return undefined;
+}
+
+/**
+ * fallback function to parse feed via a proxy
+ * @param {String} url of feed
+ * @returns Promise resolves rss/xml text from feed
+ */
+async function proxy(url) {
+
+    //return await (await fetch(`${proxy}?type=blob&url=${encodeURIComponent(url)}`)).blob();
+    return await fetch( `${proxyUrl}?url=${encodeURIComponent(url)}` );
 }

@@ -1,6 +1,8 @@
 import {XMLParser} from 'fast-xml-parser';
 import { guid } from './util';
 
+const proxyUrl = 'https://bg43qynlm5msjalfb3kd6eisti0mdils.lambda-url.us-east-1.on.aws'
+
 /**
  * parse url and return structured object
  * @param {String} url of feed to parse
@@ -31,7 +33,9 @@ export async function parseUrl(url, id) {
  * @returns Promise resolves rss/xml text from feed
  */
 async function proxy(url) {
-    const response = await fetch('https://ourrss-proxy.herokuapp.com/' + url);
+
+    const response = await fetch(`${proxyUrl}?url=${encodeURIComponent(url)}`);
+
     return response.text();
 }
 

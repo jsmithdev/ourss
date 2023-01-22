@@ -1,23 +1,49 @@
 import { track, api, LightningElement } from 'lwc';
 
+import {
+    chunk,
+} from './../../data/util.js';
+
+const CHUNK_SIZE = 75;
 
 export default class Cast extends LightningElement {
 
     current = {}
+    groups = []
 
-    isLoading = false
+    itemIndex = 0;
+    isLoading = false;
 
     @api
     get cast() {
         return this.current;
     }
     set cast(c) {
-        
         this.current = c;
+        this.itemIndex = 1;
+        this.groups = [...chunk(c.items, CHUNK_SIZE)];
     }
 
     get items(){
-        return this.current.items || [];
+        // per item index, return group; runs once if index is 0
+        return [...Array((this.itemIndex)).keys()]
+            .flatMap(i => this.groups[i])
+    }
+
+    renderedCallback(){
+        this.template.querySelector('.items')
+            .addEventListener('scroll', e => this.scrollBottom(e));
+    }
+
+    scrollBottom({target}) {
+
+        // is user at the bottom of items
+        const isBottom = target.scrollHeight - target.scrollTop === target.clientHeight;
+
+        if (isBottom){
+            // increment index if less than size
+            if(this.itemIndex < this.groups.length) this.itemIndex++;
+        }
     }
 
     play(event) {
@@ -66,14 +92,15 @@ export default class Cast extends LightningElement {
 
         event.stopPropagation();
 
-        this.cast.fav = true;
+        const cast = {...this.cast}
+        cast.fav = true;
 
         // todo pass only what's needed
         this.dispatchEvent(new CustomEvent('favorite', {
             bubbles: true,
             composed: true,
             detail: {
-                cast: this.cast,
+                cast,
             },
         }));
     }
@@ -121,39 +148,3 @@ export default class Cast extends LightningElement {
         }));
     }
 }
-
-/* 
-
-
-    selectItem(event) {
-
-        const { id } = event.currentTarget.dataset;
-        
-        if(this.prevSelected === id){
-            // toggling off
-            this.items = this.items.map(i => {
-                
-                i.selected = false;
-                
-                return i
-            })
-
-            this.prevSelected = undefined;
-            event.target.querySelector('.controls')?.classList.toggle('show')    
-
-            return undefined
-        }
-
-        this.prevSelected = id;
-        // toggling on
-
-        this.items = this.items.map(i => {
-            
-            i.selected = i.id === id;
-            
-            return i
-        })
-
-        setTimeout(() => event.target.querySelector('.controls')?.classList.toggle('show'), 0)
-    }
-     */
