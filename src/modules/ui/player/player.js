@@ -1,7 +1,6 @@
 import { api, LightningElement } from 'lwc';
 
 import {
-    setItem,
     getItemById,
 } from '../../data/idb'
 
@@ -45,8 +44,11 @@ export default class Player extends LightningElement {
         }));
     }
 
-    get uid() {
-        return this.parentId ? this.parentId + ';;;' + this.src : localStorage.uid;
+    get id() {
+        return this.current?.id || localStorage.id || '';
+    }
+    get parentId() {
+        return this.current?.parentId || localStorage.parentId || '';
     }
     get src() {
         return this.current?.src || localStorage.src || '';
@@ -86,7 +88,8 @@ export default class Player extends LightningElement {
             src: localStorage.src,
             time: localStorage.time,
             title: localStorage.title,
-            uid: localStorage.uid,
+            id: localStorage.id,
+            parentId: localStorage.parentId,
             cached: localStorage.cached,
         }
         
@@ -98,9 +101,9 @@ export default class Player extends LightningElement {
         
         if(typeof this.Audio.pause === 'function') this.Audio.pause();
 
-        //console.log('Player: Id', this.uid)
+        //console.log('Player: Id', this.id)
 
-        const blob = await this.getLocalBlob(this.uid);
+        const blob = await this.getLocalBlob(this.id);
 
         console.log('Player: setting new audio using', 
             blob ? 'Blob' : 'Url',
@@ -241,7 +244,7 @@ export default class Player extends LightningElement {
         localStorage.title = this.title
         localStorage.name = this.name
         localStorage.cached = true
-        localStorage.uid = this.uid
+        localStorage.id = this.id
 
         navigator.mediaSession.metadata = new MediaMetadata({
             title: this.title,
@@ -372,12 +375,7 @@ export default class Player extends LightningElement {
     }
 
 
-    /**
-     * get audio 
-     * @param {String} url 
-     * @returns {Blob} | undefined
-     */
-    async getLocalBlob(url){
-        return (await getItemById( 'audio', url ))?.blob;
+    async getLocalBlob(id = ''){
+        return (await getItemById( 'audio', id ))?.blob;
     }
 }

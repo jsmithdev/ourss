@@ -122,22 +122,18 @@ export default class Cast extends LightningElement {
 
         this.items = this.items.filter(x => x.id !== id);
 
-        deleteItemById('audio', parentid + ';;;' + id);
+        deleteItemById('audio', id);
     }
 
 
-    /**
-     * get audio 
-     * @param {String} url 
-     * @returns {Blob} | undefined
-     */
-    async getLocalBlob(url) {
-        return (await getItemById( 'audio', url ))?.blob;
+    async getLocalBlob(id = '') {
+        return (await getItemById( 'audio', id ))?.blob;
     }
 
     async setBlobByUrl(item) {
         const audio = {
-            id: `${item.parentid};;;${item.id}`,
+            id: item.id,
+            parentid: item.parentid,
             saved: new Date().getTime(),
             blob: await this.getUrlBlob(item.id),
         }
@@ -210,16 +206,14 @@ export default class Cast extends LightningElement {
 
         const keys = await getKeys('audio');
 
-        const parentIds = keys.map(k => k.substring(0, k.indexOf(';;;')))
+        const parentIds = keys.map(k => k.parentId)
 
         const casts = await getItemsByKeys('casts', parentIds)
 
         this.items = keys.reduce((acc, k) => {
 
-            const parentid = k.substring(0, k.indexOf(';;;'));
-            const id = k.substring(k.indexOf(';;;')+3, k.length)
-            const c = casts.find(c => c.id === parentid);
-            const i = c?.items?.find(i => i.id === id);
+            const c = casts.find(c => c.id === k.parentid);
+            const i = c?.items?.find(i => i.id === k.id);
 
             //console.log('App: loading i ',  JSON.parse(JSON.stringify(i)))
 

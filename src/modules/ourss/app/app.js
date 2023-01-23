@@ -215,8 +215,7 @@ export default class App extends LightningElement {
         deleteItemById(store, id);
 
         if (store === 'audio') {
-            const uid = id.substring(id.indexOf(';;;') + 3, id.length);
-            this.playlist = this.playlist.filter(x => x.id !== uid);
+            this.playlist = this.playlist.filter(x => x.id !== id);
         }
         else if (store === 'casts') {
             this.casts = this.casts.filter(x => x.id !== id);

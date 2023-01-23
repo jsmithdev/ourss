@@ -9,6 +9,9 @@
     "Scope": "/",
     "start_url": "/",
     "splash_pages": null,
+    "orientation": "portrait-primary",
+    "related_applications": null,
+    "categories": ["podcast", "pwa"],
     "icons": [
         {
             "src": "resources/icons/maskable_icon_x48.png",

@@ -4,7 +4,7 @@
 const path = require('path');
 
 const LwcWebpackPlugin = require('lwc-webpack-plugin');
-const { DefinePlugin, HotModuleReplacementPlugin } = require('webpack');
+const { DefinePlugin, } = require('webpack');//HotModuleReplacementPlugin
 const { InjectManifest } = require('workbox-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
