@@ -287,6 +287,8 @@ export default class App extends LightningElement {
      */
     async startLoading() {
 
+        this.isLoading = true;
+
         const casts = await getItems('casts')//, 'date'
 
         if (!casts.length) {
@@ -308,7 +310,7 @@ export default class App extends LightningElement {
             this.casts = this.sortCasts(casts)
         }
 
-        this.isLoading = false;
+        setTimeout(() => this.isLoading = false, 100)
 
         if (!this.remoteDbChecked) {
             this.checkRemoteDb();
