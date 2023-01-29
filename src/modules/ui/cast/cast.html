@@ -12,7 +12,11 @@
                     </div>
                 </template>
                 <template if:false={isLoading}>
-                    <img class="card-img" draggable="false" src={cast.image} />
+                    <img 
+                        draggable="false" 
+                        class="card-img" 
+                        src={imageSrc} 
+                    ></img>
                 </template>
             </div>
             <div class="actions max-center">

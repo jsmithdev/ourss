@@ -2,6 +2,7 @@ import { track, api, LightningElement } from 'lwc';
 
 import {
     chunk,
+    
 } from './../../data/util.js';
 
 const CHUNK_SIZE = 75;
@@ -28,6 +29,10 @@ export default class Cast extends LightningElement {
         // per item index, return group; runs once if index is 0
         return [...Array((this.itemIndex)).keys()]
             .flatMap(i => this.groups[i])
+    }
+
+    get imageSrc(){
+        return this.cast.imageData ? URL.createObjectURL(this.cast.imageData) : this.cast.image;
     }
 
     renderedCallback(){
