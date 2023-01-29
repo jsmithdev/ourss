@@ -1,5 +1,9 @@
 import {XMLParser} from 'fast-xml-parser';
-import { guid } from './util';
+
+import {
+    guid,
+    getBlobUrl,
+} from './util';
 
 const proxyUrl = 'https://bg43qynlm5msjalfb3kd6eisti0mdils.lambda-url.us-east-1.on.aws'
 
@@ -67,7 +71,10 @@ export function parse (data, url, id = guid()) {
         link: channel.link && channel.link.href ? channel.link.href : channel.link,
         image: parseImage(channel.image || channel["itunes:image"] ),
         category: channel.category || [],
-        items: []
+        items: [],
+        get imageDataUrl() {
+            return this.imageData ? getBlobUrl(this.imageData) : null;
+        }
     };
 
     let items = channel.item || channel.entry;

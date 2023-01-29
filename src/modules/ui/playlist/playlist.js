@@ -9,7 +9,9 @@ import {
     deleteItemById,
 } from '../../data/idb';
 
-const proxyUrl = 'https://web-production-8950.up.railway.app'
+import {
+    ourssFetch,
+} from '../../data/util';
 
 export default class Cast extends LightningElement {
 
@@ -153,13 +155,12 @@ export default class Cast extends LightningElement {
     async getUrlBlob(url) {
         try {
             const item = this.items.find(x => x.id === url)
-            const response = await saferFetch(url)
-            console.log(response)
+            const response = await ourssFetch(url, 'audio')
             return this.trackProgress( response, item );
         }
         catch (e) {
-            console.info('Browser and Proxy could not retrieve')
-            console.error(e)
+            console.warn('Browser and Proxy could not retrieve')
+            console.warn(e)
         }
     }
 
@@ -170,7 +171,7 @@ export default class Cast extends LightningElement {
             const reader = response.body.getReader()
 
             // Step 2: get total length
-            item.size = Number(response.headers.get('Content-Length'));
+            item.size = Number(response.headers.get('Content-Length') || response.headers.get('Content-Length'));
 
             // Step 3: read the data
             item.loaded = 0; // received that many bytes at the moment
@@ -226,40 +227,3 @@ export default class Cast extends LightningElement {
     
 }
 
-
-/**
- * parse url and return structured object
- * @param {String} url of feed to parse
- * @param {String} id of feed; Optional, if not provided, will be generated
- * @returns {Object} structured object else undefined
- */
- export async function saferFetch(url, id) {
-    try {
-        console.log('saferFetch: Fetching feed')
-        const res = await fetch(url)
-        return res; 
-    } catch (error) {
-        console.warn(error)
-        console.log('saferFetch: Feed failed, trying again...')
-        try {
-            const res = await proxy(url)
-            return res; 
-        } catch (er) {
-            console.warn(er)
-            console.info('Fallback failed. Can\'t parse the url ', url)
-        }
-    }
-    
-    return undefined;
-}
-
-/**
- * fallback function to parse feed via a proxy
- * @param {String} url of feed
- * @returns Promise resolves rss/xml text from feed
- */
-async function proxy(url) {
-
-    //return await (await fetch(`${proxy}?type=blob&url=${encodeURIComponent(url)}`)).blob();
-    return await fetch( `${proxyUrl}?url=${encodeURIComponent(url)}` );
-}

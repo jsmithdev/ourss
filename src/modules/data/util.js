@@ -51,14 +51,21 @@ export function* chunk(arr, n) {
     }
 }
 
-export function storeCast(cast) {
+export async function storeCast(cast) {
+
+    if(!cast) return console.warn('storeCast: no cast provided')
+    if(!cast.imageData && cast.image){
+        const res = await ourssFetch(cast.image, 'image')
+        if(!res?.ok) {
+            return console.warn('storeCast: image fetch failed', res)
+        }
+        cast.imageData = await res.blob();
+    }
+    
     setItem('casts', cast);
+
     return cast;
 }
-
-//function storeCasts(casts) {
-//    return casts.map(storeCast)
-//}
 
 export async function addCast(url, id){
     const cast = await parseUrl(url, id)
@@ -67,8 +74,13 @@ export async function addCast(url, id){
 }
 
 export async function updateCast(url, id){
-    await deleteCast(id)
-    return storeCast( (await parseUrl(url, id) ))
+    //await deleteCast(id)
+
+    const cast = await parseUrl(url, id)
+
+    //console.log('updateCast: ', cast)
+
+    return storeCast(cast)
 }
 
 export async function deleteCast(id){
@@ -109,4 +121,86 @@ export function guid() {
 		s4() +
 		s4()
 	);
+}
+
+
+/**
+ * parse url and return structured object
+ * @param {String} url url of feed to parse
+ * @param {String} type type of url (audio, image)
+ * @returns {Object} response object
+ */
+export async function ourssFetch(url, type) {
+    try {
+        console.log('ourssFetch: Fetching feed')
+        const res = await fetch(url)
+        return res; 
+    } catch (error) {
+        console.warn(error)
+        console.log('ourssFetch: Feed failed, trying again...')
+        try {
+
+            if(type === 'audio'){
+                const res = await getAudioByProxy(url)
+                console.log('ourssFetch: Proxy response')
+                console.log(res)
+                return res;
+            }
+            else if(type === 'image'){
+                const res = await getAudioByProxy(url)
+                return res;
+            }
+        } catch (error) {
+            console.info('Fallback failed. Can\'t parse the url ', url)
+            console.warn(error)
+        }
+    }
+    
+    return undefined;
+}
+
+/**
+ * fallback function to parse feed via a proxy
+ * @param {String} url of feed
+ * @returns Promise resolves rss/xml text from feed
+ */
+async function getAudioByProxy(url) {
+
+    const proxyUrl = 'https://web-production-8950.up.railway.app'
+    //return await (await fetch(`${proxy}?type=blob&url=${encodeURIComponent(url)}`)).blob();
+    return await fetch( `${proxyUrl}?url=${encodeURIComponent(url)}` );
+}
+
+
+async function getImageByProxy(url){
+
+    return fetch(`https://proxy.cors.sh/${url}`, {
+        headers: {
+          'x-cors-api-key': '6f2dfcef-6d8d-4d29-b1f3-1f1fcb07e4cb',
+        }
+    });
+}
+
+
+/**
+ * fallback function to get response via proxy
+ * @param {String} url of feed
+ * @returns Promise resolves rss/xml text from feed
+ */
+async function getByLambdaProxy(url) {
+
+    const proxyUrl = 'https://bg43qynlm5msjalfb3kd6eisti0mdils.lambda-url.us-east-1.on.aws'
+
+    return fetch(`${proxyUrl}?url=${encodeURIComponent(url)}`);
+}
+
+/**
+ * return a object url to a blob
+ * @param {Blob} blob
+ * @param {String} type
+ * @returns {String} url
+ */
+export function getBlobUrl(blob){
+    const Url = window.URL || window.webkitURL;
+    return Url.createObjectURL(blob);
 }

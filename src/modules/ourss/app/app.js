@@ -4,7 +4,7 @@ import {
     addCast,
     updateCast,
     deleteCast,
-    storeCast,
+    getBlobUrl,
     hasBeenHour,
     defaults,
 } from '../../data/util';
@@ -25,6 +25,9 @@ import {
     gestureListeners,
 } from '../../data/gesture';
 
+import {
+    ourssFetch,
+} from '../../data/util';
 
 export default class App extends LightningElement {
 
@@ -302,7 +305,7 @@ export default class App extends LightningElement {
         }
         else {
             console.log('App: had local casts')
-            this.updateSortCasts(casts)
+            this.casts = this.sortCasts(casts)
         }
 
         this.isLoading = false;
@@ -330,6 +333,7 @@ export default class App extends LightningElement {
                 return;
             }
         }
+
         localStorage.lastRemotePull = new Date().getTime()
 
         const urls = this.casts.map(x => x.feed)
@@ -392,15 +396,41 @@ export default class App extends LightningElement {
         }
     }
 
-    updateSortCasts(casts) {
+    sortCasts(rawCasts) {
+
+        const casts = rawCasts.map(c => ({
+            ...c,
+            get imageDataUrl() {
+                return this.imageData ? getBlobUrl(this.imageData) : null;
+            }
+        }));
 
         const faves = casts.filter(c => c.fav)
         const others = casts.filter(c => !c.fav)
 
-        this.casts = [
+        return [
             ...faves,
             ...others,
         ];
+    }
+
+    loadImageData(casts) {
+
+        // get casts w/ image url but no image data
+        const castsNoImage = casts.filter(c => !c.imageData && image)
+        
+        // get image data for each cast
+        castsNoImage.map(async cast => {
+            const { image } = cast;
+            const imageData = await getImageData(image);
+            cast.imageData = imageData//URL.createObjectURL(imageData);
+        })
+    }
+
+    async getImageData (url, path) {
+        const res = await ourssFetch(url, 'image');
+        const blob = await res.blob();
+        //todo
     }
 
 
