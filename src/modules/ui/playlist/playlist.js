@@ -205,13 +205,19 @@ export default class Cast extends LightningElement {
     async load(){
         console.log('Playlist: loading ')
 
-        const keys = await getKeys('audio');
+        const audios = await getItems('audio');
 
-        const parentIds = keys.map(k => k.parentId)
+        //console.log('Playlist: loading audios ', audios)
+
+        const parentIds = await audios.map(x => x.parentid);
+
+        //console.log('Playlist: loading parentIds ', parentIds)
 
         const casts = await getItemsByKeys('casts', parentIds)
 
-        this.items = keys.reduce((acc, k) => {
+        //console.log('Playlist: loading casts ', casts)
+
+        this.items = audios.reduce((acc, k) => {
 
             const c = casts.find(c => c.id === k.parentid);
             const i = c?.items?.find(i => i.id === k.id);
@@ -222,6 +228,8 @@ export default class Cast extends LightningElement {
 
             return acc;
         }, []);
+
+        //console.log('Playlist: loaded items ', JSON.parse(JSON.stringify(this.items)))
     }
 
     
