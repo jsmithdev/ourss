@@ -46,7 +46,8 @@ const DB = openDB(DB_NAME, VERSION, {
  * @returns {Promise<Object>} single item from store
  */
 export async function getItemById(store, uid) {
-	return (await DB).get(store, uid);}
+	return (await DB).get(store, uid);
+}
 
 /**
  * Delete item by id
