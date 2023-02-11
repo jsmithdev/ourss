@@ -114,7 +114,7 @@ export default class Player extends LightningElement {
 
         this.Audio.currentTime = this.current?.time || 0;
 
-        if(options.autoplay){
+        /* if(options.autoplay){
             if(this.Audio.canplay){
                 this.Audio.play();
             }
@@ -122,7 +122,7 @@ export default class Player extends LightningElement {
                 this.Audio.addEventListener('canplay', () => this.Audio.play());
             }
             this.paused = false;
-        }
+        } */
 
         this.dom.image.style.backgroundImage = `url(${this.currentImage})` || '';
 
