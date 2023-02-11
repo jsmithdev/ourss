@@ -117,7 +117,7 @@ export default class Cast extends LightningElement {
             return console.log('Cast: canceling deletion');
         }
 
-        const { id } = event.target.dataset;
+        const { id } = this.cast;
         console.log('Cast: delete ', id)
 
         if (!id) return;
