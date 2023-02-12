@@ -195,10 +195,9 @@ async function getByLambdaProxy(url) {
 }
 
 /**
- * return a object url to a blob
+ * return a object url from a blob
  * @param {Blob} blob
- * @param {String} type
- * @returns {String} url
+ * @returns {String} object url
  */
 export function getBlobUrl(blob){
     const Url = window.URL || window.webkitURL;
