@@ -24,5 +24,8 @@
     "build": "webpack --mode=production --env production",
     "build:dev": "webpack  --mode=development --env development",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "realm-web": "^2.0.0"
   }
 }
