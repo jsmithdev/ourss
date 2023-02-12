@@ -23,6 +23,14 @@ const DB = openDB(DB_NAME, VERSION, {
 				autoIncrement: false,
 			});
 		}
+		if(!db.objectStoreNames.contains('images')) {
+			// Create a store of objects
+			db.createObjectStore('images', {
+				// The 'id' property of the object will be the key.
+				keyPath: 'id',
+				autoIncrement: false,
+			});
+		}
 	},
 });
 
