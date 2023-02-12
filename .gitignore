@@ -5,3 +5,4 @@ dist
 
 # scratch directory
 scratch
+tests/data/
