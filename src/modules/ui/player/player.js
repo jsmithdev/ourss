@@ -2,7 +2,11 @@ import { api, LightningElement } from 'lwc';
 
 import {
     getItemById,
-} from '../../data/idb'
+} from '../../data/idb.js'
+
+import {
+    getBlobUrl,
+} from '../../data/util.js'
 
 export default class Player extends LightningElement {
 
@@ -110,7 +114,7 @@ export default class Player extends LightningElement {
             options
         );
 
-        this.Audio = new Audio( blob ? URL.createObjectURL(blob) : this.src);
+        this.Audio = new Audio( blob ? getBlobUrl(blob) : this.src);
 
         this.Audio.currentTime = this.current?.time || 0;
 

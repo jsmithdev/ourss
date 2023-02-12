@@ -2,7 +2,7 @@ import { track, api, LightningElement } from 'lwc';
 
 import {
     chunk,
-    
+    getBlobUrl,
 } from './../../data/util.js';
 
 const CHUNK_SIZE = 75;
@@ -32,7 +32,7 @@ export default class Cast extends LightningElement {
     }
 
     get imageSrc(){
-        return this.cast.imageData ? URL.createObjectURL(this.cast.imageData) : this.cast.image;
+        return this.cast.imageData ? getBlobUrl(this.cast.imageData) : this.cast.image;
     }
 
     renderedCallback(){

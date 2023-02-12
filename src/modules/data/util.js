@@ -202,5 +202,7 @@ async function getByLambdaProxy(url) {
  */
 export function getBlobUrl(blob){
     const Url = window.URL || window.webkitURL;
-    return Url.createObjectURL(blob);
+    const url = Url.createObjectURL(blob);
+    setTimeout(() => Url.revokeObjectURL(url), 1000);
+    return url;
 }

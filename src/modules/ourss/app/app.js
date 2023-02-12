@@ -425,7 +425,7 @@ export default class App extends LightningElement {
         castsNoImage.map(async cast => {
             const { image } = cast;
             const imageData = await getImageData(image);
-            cast.imageData = imageData//URL.createObjectURL(imageData);
+            cast.imageData = imageData
         })
     }
 
