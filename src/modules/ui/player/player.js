@@ -21,16 +21,20 @@ export default class Player extends LightningElement {
         return this._current || {};
     }
     set current(item){
-        
-        const isNew = (this._current?.id !== item?.id);
 
-        if(item?.name){
-            //console.log(JSON.parse(JSON.stringify(item)))
-            this._current = item;
-            this.newAudio({
-                autoplay: this.autoplay || (isNew || localStorage.src !== item.src),
-            });
-        }
+        if(!item) return;
+        
+        const isNew = (this._current?.id !== item?.id) && (localStorage.src !== item.src)
+
+        console.log('Player: current set - ', {
+            item,
+            isNew,
+        });
+        
+        this._current = item;
+        this.newAudio({
+            autoplay: this.autoplay || isNew,
+        });
     }
     
     navigate(event) {
@@ -118,7 +122,7 @@ export default class Player extends LightningElement {
 
         this.Audio.currentTime = this.current?.time || 0;
 
-        /* if(options.autoplay){
+        if(options.autoplay){
             if(this.Audio.canplay){
                 this.Audio.play();
             }
@@ -126,9 +130,11 @@ export default class Player extends LightningElement {
                 this.Audio.addEventListener('canplay', () => this.Audio.play());
             }
             this.paused = false;
-        } */
+        }
 
-        this.dom.image.style.backgroundImage = `url(${this.currentImage})` || '';
+        this.dom.image.style.backgroundImage = this.currentImage
+            ? `url(${this.currentImage})` 
+            : '';
 
         this.Audio.addEventListener('timeupdate', event => this.updateTime(event));
         //this.Audio.addEventListener('playing', event => this.playing(event));
@@ -153,6 +159,7 @@ export default class Player extends LightningElement {
             }))
         })
         
+        this.setLocalStorage()
         this.metadata();
     }
 
@@ -178,22 +185,22 @@ export default class Player extends LightningElement {
 
     updateTime() {
         const duration = this.Audio.duration
-        const time = this.Audio.currentTime
+        const position = this.Audio.currentTime
         //console.log('updateTime ', time, ' duration ', duration)
-        if (duration > 0) {
-            navigator.mediaSession.setPositionState({ duration: time });
+        
+        if(duration && position) {
             // Move progress line 
-            this.dom.progressAmount.style.width = `${((time / duration) * 100)}%`
-            // 
-            this.duration = '-'+new Date((duration * 1000) - (time * 1000))
-                .toISOString().substring(11, 19).replace(/00:/g, '')
-        }
-        if(time) {
-            localStorage.time = time
-            this.currentTime = new Date(time * 1000).toISOString().substring(11, 19)
+            this.dom.progressAmount.style.width = `${((position / duration) * 100)}%`
+
+            this.duration = '-'+new Date((duration * 1000) - (position * 1000))
+                .toISOString().substring(11, 19).replace(/00:/g, '');
+ 
+            localStorage.time = position;
+            this.currentTime = new Date(position * 1000).toISOString().substring(11, 19)
+
             navigator.mediaSession.setPositionState({
                 duration,
-                position: time,
+                position,
             });
         }
     }
@@ -242,14 +249,6 @@ export default class Player extends LightningElement {
     metadata() { 
         console.log('Player: setting metadata ', `${this.name} - ${this.currentImage}`)
         
-        localStorage.image = this.currentImage
-        localStorage.currentTime = 0
-        localStorage.src = this.src
-        localStorage.title = this.title
-        localStorage.name = this.name
-        localStorage.cached = true
-        localStorage.id = this.id
-
         navigator.mediaSession.metadata = new MediaMetadata({
             title: this.title,
             artist: this.name,
@@ -381,5 +380,16 @@ export default class Player extends LightningElement {
 
     async getLocalBlob(id = ''){
         return (await getItemById( 'audio', id ))?.blob;
+    }
+
+    setLocalStorage() {
+
+        localStorage.image = this.currentImage
+        localStorage.currentTime = 0
+        localStorage.src = this.src
+        localStorage.title = this.title
+        localStorage.name = this.name
+        localStorage.cached = true
+        localStorage.id = this.id
     }
 }
