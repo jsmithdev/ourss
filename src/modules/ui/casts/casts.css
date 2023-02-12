@@ -31,7 +31,7 @@ path.heart {
 
 .grid-box {
     display: grid;
-    gap: 5px;
+    gap: 15px 15px;
     margin: 0.75rem;
     grid-template-columns: repeat(auto-fit, minmax(175px, 225px));
     align-items: center;
@@ -40,6 +40,8 @@ path.heart {
 }
 @media only screen and (max-width: 600px) {
     .grid-box {
+        gap: 5px;
+        margin: 0.75rem 0px;
         grid-template-columns: repeat(auto-fit, minmax(50px, 40vw));
     }
 }
@@ -49,7 +51,7 @@ path.heart {
     color: #212121;
     text-align: center;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
+    max-height: 225px;
     cursor: pointer;
     border-radius: 5px;
 }
