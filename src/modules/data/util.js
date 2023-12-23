@@ -9,10 +9,6 @@ import {
     //checkBaseExists,
 } from './idb';
 
-import {
-    //initCasts,
-    addToFire,
-} from './fire'
 
 
 export const HOUR = 3600000;//60*60*1000
@@ -26,17 +22,33 @@ export function hasBeenHour(time){
 export const defaults = {
     view: 'casts',
     feeds: [
-        'https://rss.art19.com/never-not-funny',
-        //'https://rss.art19.com/the-daily',
-        'https://brianposehnsnerdpoker.libsyn.com/rss',
-        'https://feeds.feedburner.com/thebuglefeed',
-        //'https://www.omnycontent.com/d/playlist/885ace83-027a-47ad-ad67-aca7002f1df8/d07cfb12-42fa-4a5e-b579-aca8005d018b/011c9cdc-63a0-4eaa-b377-aca8005d019e/podcast.rss',
-        //'https://feeds.feedburner.com/dancarlin/history?format=xml',
-        'https://thedollop.libsyn.com/rss',
-        //'https://lexfridman.com/feed/podcast',
-        //'https://feeds.simplecast.com/Ao0C24M8',
-        //'https://www.omnycontent.com/d/playlist/aaea4e69-af51-495e-afc9-a9760146922b/f7adbeff-8e96-4861-ab31-aa7a000e2532/62743333-5a2a-4fe0-81b8-aa7a000e253d/podcast.rss',
-    ]
+        {
+            "id": "efb14fb7-3cbe-a5dd-5643-67502cf7cb7b",
+            "title": "StarTalk Radio",
+            "feed": "https://feeds.simplecast.com/4T39_jAj",
+            "rank": 0,
+            "categories": {
+                "16": "Comedy",
+                "28": "History",
+                "77": "Society",
+                "78": "Culture"
+            },
+            "img":"https://image.simplecastcdn.com/images/8b62332a-56b8-4d25-b175-1e588b078323/832ccedd-f592-4297-90c4-bb2eee3c5a24/3000x3000/image.jpg?aid=rss_feed",
+        },
+        {
+            "id": "b684f123-4d82-9197-be67-430a717fc888",
+            "title": "The Dollop with Dave Anthony and Gareth Reynolds",
+            "feed": "https://thedollop.libsyn.com/rss",
+            "rank": 0,
+            "categories": {
+                "16": "Comedy",
+                "28": "History",
+                "77": "Society",
+                "78": "Culture"
+            },
+            "img": "https://www.omnycontent.com/d/playlist/885ace83-027a-47ad-ad67-aca7002f1df8/22b063ac-654d-428f-bd69-ae2400349cde/65ff0206-b585-4e2a-9872-ae240034c9c9/image.jpg?t=1642981771&size=Large",
+        },
+    ],
 }
 
 /**
@@ -69,7 +81,7 @@ export async function storeCast(cast) {
 
 export async function addCast(url, id){
     const cast = await parseUrl(url, id)
-    addToFire(url, cast.id)
+    // todo add to mongo
     return storeCast(cast)
 }
 
@@ -166,33 +178,11 @@ export async function ourssFetch(url, type) {
  */
 async function getAudioByProxy(url) {
 
-    const proxyUrl = 'https://web-production-8950.up.railway.app'
+    const proxyUrl = 'https://bg43qynlm5msjalfb3kd6eisti0mdils.lambda-url.us-east-1.on.aws';
     //return await (await fetch(`${proxy}?type=blob&url=${encodeURIComponent(url)}`)).blob();
     return await fetch( `${proxyUrl}?url=${encodeURIComponent(url)}` );
 }
 
-
-async function getImageByProxy(url){
-
-    return fetch(`https://proxy.cors.sh/${url}`, {
-        headers: {
-          'x-cors-api-key': '6f2dfcef-6d8d-4d29-b1f3-1f1fcb07e4cb',
-        }
-    });
-}
-
-
-/**
- * fallback function to get response via proxy
- * @param {String} url of feed
- * @returns Promise resolves rss/xml text from feed
- */
-async function getByLambdaProxy(url) {
-
-    const proxyUrl = 'https://bg43qynlm5msjalfb3kd6eisti0mdils.lambda-url.us-east-1.on.aws'
-
-    return fetch(`${proxyUrl}?url=${encodeURIComponent(url)}`);
-}
 
 /**
  * return a object url from a blob

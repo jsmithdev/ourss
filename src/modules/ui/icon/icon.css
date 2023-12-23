@@ -1,0 +1,29 @@
+
+.ball {
+  display: block;
+  margin: auto 0px;
+  border-radius: 50%;
+  height: auto;
+  
+  background: radial-gradient(
+    circle at 0% 90%, 
+    var(--color-primary) 25%, 
+    var(--color-accent) 35%, 
+    var(--color-secondary) 45%, 
+    var(--color-primary) 55%,
+    var(--color-accent) 65%, 
+    var(--color-secondary) 75%, 
+    var(--color-primary) 85%
+  );
+  box-shadow: rgb(255 255 255) 0px 0px 7px, rgb(255 255 255) 0px 0px 10px, rgb(255 255 255) 0px 0px 21px, rgb(2 135 207) 0px 0px 42px, rgb(2 135 207) 0px 0px 82px;
+}
+
+
+.neon-text {
+  color: rgb(255, 255, 255);
+  font-size: 4rem;
+  font-family: Yellowtail, sans-serif;
+  text-shadow: rgb(255 255 255) 0px 0px 7px, rgb(255 255 255) 0px 0px 10px, rgb(255 255 255) 0px 0px 21px, rgb(2 135 207) 0px 0px 42px, rgb(2 135 207) 0px 0px 82px;
+  line-height: 4;
+  text-align: center;
+}

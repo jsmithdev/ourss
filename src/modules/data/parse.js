@@ -72,9 +72,6 @@ export function parse (data, url, id = guid()) {
         image: parseImage(channel.image || channel["itunes:image"] ),
         category: channel.category || [],
         items: [],
-        get imageDataUrl() {
-            return this.imageData ? getBlobUrl(this.imageData) : null;
-        }
     };
 
     let items = channel.item || channel.entry;

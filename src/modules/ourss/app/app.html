@@ -40,7 +40,8 @@
                 <ui-settings
                     user={user}
                     onradio={radio}
-                    onsignin={signIn}
+                    onlogin={login}
+                    onlogout={logout}
                     onadd={addCast}
                 ></ui-settings>
             </section>
@@ -58,5 +59,6 @@
 
     <ui-auth
         onloggedin={loggedIn}
+        onloggedout={loggedOut}
     ></ui-auth>
 </template>

@@ -256,6 +256,8 @@ export default class Player extends LightningElement {
                 src: this.currentImage
             }]
         })
+
+        console.log('Player: setting mediaSession: ', `${this.name} - ${this.currentImage}`)
         
         const play = () => {
             this.play()

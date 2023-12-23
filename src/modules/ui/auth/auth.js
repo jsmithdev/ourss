@@ -1,31 +1,36 @@
 import { api, LightningElement } from 'lwc';
 
 import {
-    onAuthStateChanged,
-    signIn,
-} from '../../data/fire';
+    login,
+    logout,
+} from '../../data/mongo.js';
 
 export default class Auth extends LightningElement {
 
     constructor() {
         super();
-        onAuthStateChanged((user) => {
-            if (user) {
-                this.user = user;
-                this.dispatchEvent(new CustomEvent('loggedin', {
-                    detail: {
-                        user: this.user,
-                    },
-                }));
-            }
-        })
+        //onAuthStateChanged
     }
     
     @api
-    async signIn() {
+    async login() {
+        
         try {
-            const user = await signIn();
+            //const user = await signIn();
+            const user = await login();
             this.dispatchEvent(new CustomEvent('loggedin', {detail: {user}}));
+        }
+        catch(e) {
+            console.log('error signing in')
+            console.log(e)
+        }
+    }
+    @api
+    async logout() {
+        
+        try {
+            const user = await logout();
+            this.dispatchEvent(new CustomEvent('loggedout', {detail: {user}}));
         }
         catch(e) {
             console.log('error signing in')

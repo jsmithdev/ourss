@@ -14,15 +14,22 @@
                 </svg>
             </div>
 
+            <br />
+            <div class="center">
+                <ui-button
+                    label="Logout"
+                    onclick={logout}
+                ></ui-button>
+            </div>
         </template>
 
         <template if:false={username}>
             <div class="heading">
-                Sign in to add feeds to the database
+                Login to use features like remote database
             </div>
             <ui-button
-                label="Google Sign In"
-                onclick={signIn}
+                label="Login"
+                onclick={login}
             ></ui-button>
         </template>
 

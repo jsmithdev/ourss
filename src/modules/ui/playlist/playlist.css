@@ -34,10 +34,9 @@ div.container {
 }
 div.head {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 250px 1fr;
     align-items: center;
-    border-radius: 5px 5px 0px 0px;
-    background: url(./resources/icons/icon-128x128.png) center center no-repeat;
+    width: -webkit-fill-available;
 }
 
 

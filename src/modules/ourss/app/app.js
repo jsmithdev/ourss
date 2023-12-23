@@ -18,8 +18,8 @@ import {
 
 import {
     getRemoteDb,
-    setRemoteDb,
-} from '../../data/fire';
+    //setRemoteDb,
+} from '../../data/mongo';
 
 import {
     gestureListeners,
@@ -199,8 +199,8 @@ export default class App extends LightningElement {
 
         if (!this.user.uid) return console.warn('no user');
 
-        // update remote db
-        const res = await setRemoteDb('users', user)
+        // todo update mongo user
+        //const res = await setRemoteDb('users', user)
 
         console.info('App: favorite results: ', res)
 
@@ -253,8 +253,14 @@ export default class App extends LightningElement {
     /**
      * used to run sign in process
      */
-    signIn() {
-        this.template.querySelector('ui-auth').signIn();
+    login() {
+        this.template.querySelector('ui-auth').login();
+    }
+    /**
+     * used to run sign out process
+     */
+    logout() {
+        this.template.querySelector('ui-auth').logout();
     }
 
     /**
@@ -263,13 +269,22 @@ export default class App extends LightningElement {
      */
     loggedIn({ detail }) {
 
-        //console.log('App: user info ', detail.user)
+        console.log('App: logged in ', detail.user)
 
         this.user = detail.user;
         // if haven't already, check remote db
         if (!this.remoteDbChecked) {
             this.checkRemoteDb();
         }
+    }    /**
+     * ran when a user has logged in
+     * @param {Event} event object which has the user as a detail
+     */
+    loggedOut({ detail }) {
+
+        console.log('App: logged out ', detail.user)
+
+        this.user = undefined;
     }
 
     /**
@@ -287,7 +302,24 @@ export default class App extends LightningElement {
      */
     async startLoading() {
 
-        this.isLoading = true;
+        this.isLoading = false;
+
+        //const images = await getItems('images')
+
+		//console.log(images)
+
+        //if (!images.length) {
+        //    defaults.images.map(async img => {
+                
+                //todo
+
+        /* get imageDataUrl() {
+            return this.imageData ? getBlobUrl(this.imageData) : null;
+        } */
+
+        this.getCasts()
+    }
+    async getCasts(){
 
         const casts = await getItems('casts')//, 'date'
 
@@ -308,17 +340,19 @@ export default class App extends LightningElement {
         else {
             console.log('App: had local casts')
             this.casts = this.sortCasts(casts)
+            console.log('App: casts ', JSON.parse(JSON.stringify(this.casts)))
         }
 
-        setTimeout(() => this.isLoading = false, 100)
+        //setTimeout(() => this.isLoading = false, 100)
 
-        if (!this.remoteDbChecked) {
+        if (!this.remoteDbChecked && this.user?.id) {
             this.checkRemoteDb();
         }
 
+        this.view('settings')
+
         return true;
     }
-
     /**
      * check remote db for feeds
      * @returns undefined
@@ -332,7 +366,8 @@ export default class App extends LightningElement {
         if (lastRun) {
             if (!hasBeenHour(lastRun)) {
                 console.log('App: last remote pull was less than an hour ago')
-                return;
+                // todo return here
+                //return;
             }
         }
 
@@ -340,10 +375,16 @@ export default class App extends LightningElement {
 
         const urls = this.casts.map(x => x.feed)
         const remoteDb = await getRemoteDb('casts');
-        const newFeeds = remoteDb.filter(x => !urls.includes(x.url))
+
+        console.log('App: remote db ', remoteDb)
+
+        const newFeeds = remoteDb.filter(x => !urls.includes(x.feed))
+
+        console.log('App: newFeeds ', newFeeds)
+
         if (newFeeds.length) {
             console.log('App: new feeds: ', newFeeds)
-            newFeeds.map(async data => {
+            /* newFeeds.map(async data => {
                 const { id, url } = data;
                 this.worker.postMessage({
                     id,
@@ -351,7 +392,7 @@ export default class App extends LightningElement {
                     store: true,
                     type: 'parse',
                 });
-            })
+            }) */
         }
     }
 

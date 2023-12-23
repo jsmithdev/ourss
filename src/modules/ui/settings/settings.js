@@ -11,7 +11,7 @@ export default class Settings extends LightningElement {
     @api user = {}
 
     get username(){
-        return this.user?.displayName || '';
+        return this.user?.id || '';
     }
 
     get dom(){
@@ -20,8 +20,14 @@ export default class Settings extends LightningElement {
         }
     }
 
-    signIn() {
-        this.dispatchEvent(new CustomEvent('signin', {
+    login() {
+        this.dispatchEvent(new CustomEvent('login', {
+            bubbles: true,
+            composed: true,
+        }));
+    }
+    logout() {
+        this.dispatchEvent(new CustomEvent('logout', {
             bubbles: true,
             composed: true,
         }));
