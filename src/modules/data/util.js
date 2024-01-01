@@ -1,4 +1,8 @@
 
+const baseProxyName = __PROXY__;
+//const baseProxyLoc = 'lambda-url.us-east-1.on.aws';
+const baseProxyLoc = 'execute-api.us-east-1.amazonaws.com/default/RustProxy';
+
 import { 
     parseUrl,
  } from './parse';
@@ -9,9 +13,11 @@ import {
     //checkBaseExists,
 } from './idb';
 
-
-
 export const HOUR = 3600000;//60*60*1000
+
+export const baseProxyUri = 'https://'+baseProxyName+'.'+baseProxyLoc+'?url=';
+
+console.log(baseProxyUri)
 
 export function hasBeenHour(time){
     const now = new Date().getTime();
@@ -79,20 +85,22 @@ export async function storeCast(cast) {
     return cast;
 }
 
-export async function addCast(url, id){
+export async function addCast(data){
+    const {url, id} = data;
     const cast = await parseUrl(url, id)
     // todo add to mongo
     return storeCast(cast)
 }
 
-export async function updateCast(url, id){
-    //await deleteCast(id)
+export async function updateCast(data){
 
-    const cast = await parseUrl(url, id)
+    console.log('App: update feed: ', data)
 
-    //console.log('updateCast: ', cast)
-
-    return storeCast(cast)
+    this.worker.postMessage({
+        feed,
+        store: true,
+        type: 'parse',
+    });
 }
 
 export async function deleteCast(id){
@@ -178,9 +186,9 @@ export async function ourssFetch(url, type) {
  */
 async function getAudioByProxy(url) {
 
-    const proxyUrl = 'https://bg43qynlm5msjalfb3kd6eisti0mdils.lambda-url.us-east-1.on.aws';
-    //return await (await fetch(`${proxy}?type=blob&url=${encodeURIComponent(url)}`)).blob();
-    return await fetch( `${proxyUrl}?url=${encodeURIComponent(url)}` );
+    const proxyUrl = 'https://'+baseProxyUri;
+
+    return fetch( proxyUrl + encodeURIComponent(url) );
 }
 
 

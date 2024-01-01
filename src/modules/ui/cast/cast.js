@@ -77,10 +77,11 @@ export default class Cast extends LightningElement {
         event.cancelBubble = true;
         this.isLoading = true;
 
-        const callback = c => {
+        /* const callback = c => {
             this.cast = c;
             this.isLoading = false
-        }
+        } */
+        setTimeout(() => this.isLoading = false, 1000)
 
         this.dispatchEvent(new CustomEvent('refresh', {
             bubbles: true,

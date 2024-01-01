@@ -51,7 +51,9 @@ export default class Settings extends LightningElement {
                 bubbles: true,
                 composed: true,
                 detail: {
-                    url: value,
+                    data: {
+                        feed: value,
+                    }
                 }
             }))
         }

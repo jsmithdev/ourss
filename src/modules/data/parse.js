@@ -1,11 +1,11 @@
+
 import {XMLParser} from 'fast-xml-parser';
 
 import {
     guid,
     getBlobUrl,
+    baseProxyUri,
 } from './util';
-
-const proxyUrl = 'https://bg43qynlm5msjalfb3kd6eisti0mdils.lambda-url.us-east-1.on.aws'
 
 /**
  * parse url and return structured object
@@ -13,9 +13,15 @@ const proxyUrl = 'https://bg43qynlm5msjalfb3kd6eisti0mdils.lambda-url.us-east-1.
  * @param {String} id of feed; Optional, if not provided, will be generated
  * @returns {Object} structured object else undefined
  */
-export async function parseUrl(url, id) {
+export async function parseUrl(data) {
+
+    console.log('Parser: ', data)
+
+    const { id } = data;
+    const url = data.url ? data.url : data.feed;
+
     try {
-        console.log('Parser: Fetching feed')
+        console.log('Parser: Fetching feed ', url)
         return parse(await (await fetch(url)).text(), url, id);
     } catch (error) {
         console.warn(error)
@@ -38,7 +44,7 @@ export async function parseUrl(url, id) {
  */
 async function proxy(url) {
 
-    const response = await fetch(`${proxyUrl}?url=${encodeURIComponent(url)}`);
+    const response = await fetch(baseProxyUri+encodeURIComponent(url));
 
     return response.text();
 }

@@ -11,7 +11,8 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 const { version } = require('./package.json');
 
-
+//const proxy = 'eys63niz7z4miobpicj7b2xbiu0djcpa';
+const proxy = 'zqp716s5y4';
 
 module.exports = (env) => {
 
@@ -44,6 +45,7 @@ module.exports = (env) => {
 			new DefinePlugin({
 				__VERSION__: JSON.stringify(version),
 				__MODE__: JSON.stringify(mode),
+				__PROXY__: JSON.stringify(proxy),
 			}),
 			new CopyPlugin({
 				patterns: [

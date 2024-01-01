@@ -127,9 +127,16 @@ export default class App extends LightningElement {
     }
 
     async addCast({ detail }) {
-        const { url, id } = detail;
-        //console.log('addCast ', url)
-        this.casts = [...this.casts, (await addCast(url, id))]
+        const { data } = detail;
+        const { feed } = data;
+        
+        console.log('App: add feed: ', data)
+
+        this.worker.postMessage({
+            feed,
+            store: true,
+            type: 'parse',
+        });
         //console.log({
         //    CastsNow: this.casts,
         //})
@@ -170,13 +177,20 @@ export default class App extends LightningElement {
 
     async refresh({ detail }) {
 
+        console.log('App: refresh feed: ', detail)
+
         const { feed, id, callback } = detail;
 
-        const cast = await updateCast(feed, id)
+        this.worker.postMessage({
+            feed,
+            id,
+            store: true,
+            type: 'parse',
+        });
 
-        this.updateSortCast(cast)
+        this.updateSortCast({feed,id})
 
-        if (callback) callback(cast);
+        if (callback) callback({feed,id});
     }
     async favorite({ detail }) {
 
@@ -324,9 +338,9 @@ export default class App extends LightningElement {
         const casts = await getItems('casts')//, 'date'
 
         if (!casts.length) {
-            defaults.feeds.map(async url => {
+            defaults.feeds.map(data => {
                 this.worker.postMessage({
-                    url,
+                    data,
                     store: true,
                     type: 'parse',
                 });
@@ -367,7 +381,7 @@ export default class App extends LightningElement {
             if (!hasBeenHour(lastRun)) {
                 console.log('App: last remote pull was less than an hour ago')
                 // todo return here
-                //return;
+                return;
             }
         }
 
@@ -384,15 +398,11 @@ export default class App extends LightningElement {
 
         if (newFeeds.length) {
             console.log('App: new feeds: ', newFeeds)
-            /* newFeeds.map(async data => {
-                const { id, url } = data;
-                this.worker.postMessage({
-                    id,
-                    url,
-                    store: true,
-                    type: 'parse',
-                });
-            }) */
+            this.worker.postMessage({
+                casts: newFeeds,
+                store: true,
+                type: 'parse-array',
+            });
         }
     }
 
