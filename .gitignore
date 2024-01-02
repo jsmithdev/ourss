@@ -6,3 +6,4 @@ dist
 # scratch directory
 scratch
 tests/data/
+tests/proxy.js
