@@ -17,6 +17,11 @@ export default class Cast extends LightningElement {
 
     items = [];
 
+    get itemsCount() {
+        return this.items.length;
+    }
+    
+
     @api next(prevId, prevParent) {
         
         console.log('Playlist: next call - ', prevId, ' -- ', prevParent);

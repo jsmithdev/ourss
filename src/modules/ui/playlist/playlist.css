@@ -9,6 +9,12 @@
     }
 }
 
+div.dynamic-width {
+    border-radius: 0px 0px 5px 5px;
+    max-width: 37rem;
+    width: -webkit-fill-available;
+}
+
 div.items {
     user-select: none;
     font-size: 0.8rem;
@@ -25,12 +31,12 @@ div.items {
 }
 
 div.container {
-    user-select: none;
     display: grid;
     height: 100%;
-    grid-template-rows: 1fr 2fr;
+    grid-template-rows: 200px 1fr;
     grid-template-columns: 1fr;
     justify-items: center;
+    user-select: none;
 }
 div.head {
     display: grid;

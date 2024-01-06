@@ -363,7 +363,7 @@ export default class App extends LightningElement {
             this.checkRemoteDb();
         }
 
-        this.view('settings')
+        //this.view('settings')
 
         return true;
     }

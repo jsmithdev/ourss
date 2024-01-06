@@ -15,7 +15,7 @@ import {
 
 export const HOUR = 3600000;//60*60*1000
 
-export const baseProxyUri = 'https://'+baseProxyName+'.'+baseProxyLoc+'?url=';
+export const baseProxyUri = baseProxyName+'.'+baseProxyLoc+'?url=';
 
 console.log(baseProxyUri)
 

@@ -21,9 +21,11 @@
 
 .neon-text {
   color: rgb(255, 255, 255);
-  font-size: 4rem;
+  font-size: 3rem;
   font-family: Yellowtail, sans-serif;
   text-shadow: rgb(255 255 255) 0px 0px 7px, rgb(255 255 255) 0px 0px 10px, rgb(255 255 255) 0px 0px 21px, rgb(2 135 207) 0px 0px 42px, rgb(2 135 207) 0px 0px 82px;
-  line-height: 4;
+  line-height: 3;
   text-align: center;
+  width: 10rem;
+  height: 10rem;
 }

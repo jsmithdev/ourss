@@ -1,17 +1,27 @@
 <template>
     <div class="container">
 
-        <div class="head">
+        <div class="dynamic-width">
+
             <!-- <text-neon
                 text="Playlist"
                 onclick={load}
             ></text-neon> -->
-            <div></div>
-            <ui-icon
-                text="Playlist"
-                onclick={load}
-            ></ui-icon>
-            <div></div>
+
+            <ui-img-header>
+                    
+                <span slot="image">
+                    <ui-icon
+                        text="Playlist"
+                        onclick={load}
+                    ></ui-icon>
+                </span>
+
+                <span slot="actions">
+                    <p style="color:white;">You have {itemsCount} downloaded</p>
+                </span>
+
+            </ui-img-header>
         </div>
 
         <div class="items">
