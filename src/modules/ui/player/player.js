@@ -39,7 +39,16 @@ export default class Player extends LightningElement {
     
     navigate(event) {
 
-        const { view } = event.currentTarget.dataset || event.target.dataset;
+        console.log('Player: navigate ', event.target)
+        const view = event.target.dataset?.view
+            ? event.target.dataset.view
+            : event.currentTarget.dataset?.view
+                ? event.currentTarget.dataset.view
+                : event.target.querySelector('svg')
+                    ? event.target.querySelector('svg').dataset?.view
+                    : undefined;
+
+        console.log('Player: navigate ', view)
 
         if(!view) return;
         
