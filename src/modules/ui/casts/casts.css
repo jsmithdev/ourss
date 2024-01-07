@@ -31,17 +31,14 @@ path.heart {
 
 .grid-box {
     display: grid;
-    gap: 15px 15px;
-    margin: 0.75rem;
-    grid-template-columns: repeat(auto-fit, minmax(175px, 225px));
+    row-gap: 25px;
+    margin-top: 25px;
     align-items: center;
-    place-content: center;
-    justify-content: space-evenly;
+    place-content: space-between space-evenly;
+    grid-template-columns: repeat(auto-fit, minmax(175px, 225px));
 }
 @media only screen and (max-width: 600px) {
     .grid-box {
-        gap: 5px;
-        margin: 0.75rem 0px;
         grid-template-columns: repeat(auto-fit, minmax(50px, 40vw));
     }
 }
