@@ -38,6 +38,21 @@ export async function getRemoteDb(name) {
     return collection.find( {}, { id: 1, feed: 1, _id: 0 });
 }
 
+export async function setRemoteDb(table, doc) {
+    
+    const mongo = app.currentUser.mongoClient(CLUSTER_NAME);
+
+    // Get a reference to the your collection
+    const collection = mongo.db(DATABASE_NAME).collection(table);
+
+    // Add the document to the collection
+    const result = await collection.insertOne(doc);
+
+    console.log("Document inserted with id: ", result.insertedId);
+
+    return result;
+}
+
 function log(...args) {
     console.log('Mongo: ',...args);
 }

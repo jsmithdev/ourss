@@ -17,7 +17,7 @@ import {
 
 import {
     getRemoteDb,
-    //setRemoteDb,
+    setRemoteDb,
 } from '../../data/mongo';
 
 const Queue = new Map();
@@ -418,6 +418,11 @@ export default class App extends LightningElement {
         const { feed } = data;
         
         const actionId = Math.random().toString(36).substring(2, 15);
+
+        const callback = (cast) => {
+            const { id, feed } = cast;
+            setRemoteDb('casts', { id, feed })
+        }
 
         Queue.set(actionId, callback);
 
