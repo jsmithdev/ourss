@@ -1,24 +1,24 @@
 
 import {
     parseUrl,
-} from './../data/parse';
+} from '../data/parse';
 
 
-self.addEventListener( 'message', async ({data}) => {
+self.addEventListener( 'message', ({data}) => {
 
-    const {type, store} = data;
+    const {type, store, actionId} = data;
 
     console.log('Worker Data: ', data);
 
     if(type === 'parse'){
 
-        const toParse = await parseUrl(data);
-
-        self.postMessage({
-            data: toParse,
+        parseUrl(data)
+        .then(d => self.postMessage({
+            data: d,
+            actionId,
             store,
             whoami: 'worker-parser',
-        });
+        }));
     }
     else if(type === 'parse-array'){
 
@@ -26,13 +26,12 @@ self.addEventListener( 'message', async ({data}) => {
 
         for (const newData of casts) {
 
-            const data = await parseUrl(newData);
-
-            self.postMessage({
-                data,
+            parseUrl(newData)
+            .then(d => self.postMessage({
+                data: d,
                 store,
                 whoami: 'worker-parser',
-            });
+            }));
         }
     }
 } );

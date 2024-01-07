@@ -16,29 +16,21 @@
 
             <br />
             <div class="center">
-                <ui-button
+                <ourss-button
+                    lwc:external
                     label="Logout"
                     onclick={logout}
-                ></ui-button>
+                ></ourss-button>
             </div>
         </template>
-
-        <template if:false={username}>
-            <div class="heading">
-                Login to use features like remote database
-            </div>
-            <ui-button
-                label="Login"
-                onclick={login}
-            ></ui-button>
-        </template>
-
+        
         <br />
 
         <div class="heading">
             Continuously play random episodes like a radio
         </div>
-        <ui-button
+        <ourss-button
+            lwc:external
             label="Play Radio"
             onclick={radio}
         >
@@ -49,23 +41,25 @@
                     </path>
                 </svg>
             </span>
-        </ui-button>
+        </ourss-button>
         
         <div class="heading">
             Delete all stored podcasts from this device
         </div>
-        <ui-button
+        <ourss-button
+            lwc:external
             label="Clear Cache"
             onclick={clearCache}
-        ></ui-button>
+        ></ourss-button>
 
         <div class="heading">
             Delete all data from this device
         </div>
-        <ui-button
+        <ourss-button
+            lwc:external
             label="Clear All"
             onclick={clearAll}
-        ></ui-button>
+        ></ourss-button>
 
         <div class="foot">
             {version}

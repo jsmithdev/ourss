@@ -31,16 +31,5 @@
                 </template>
             </div>
         </template>
-        <template if:false={hasCasts}>    
-            <template if:false={username}>
-                <div class="heading">
-                    Login to use features like remote database
-                </div>
-                <ui-button
-                    label="Login"
-                    onclick={login}
-                ></ui-button>
-            </template>
-        </template>
     </div>
 </template>

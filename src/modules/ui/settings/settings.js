@@ -19,13 +19,7 @@ export default class Settings extends LightningElement {
             input: this.template.querySelector('input'),
         }
     }
-
-    login() {
-        this.dispatchEvent(new CustomEvent('login', {
-            bubbles: true,
-            composed: true,
-        }));
-    }
+    
     logout() {
         this.dispatchEvent(new CustomEvent('logout', {
             bubbles: true,

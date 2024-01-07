@@ -8,20 +8,21 @@
                 onclick={load}
             ></text-neon> -->
 
-            <ui-img-header>
+            <ourss-img-header lwc:external>
                     
                 <span slot="image">
-                    <ui-icon
+                    <ourss-icon
+                        lwc:external
                         text="Playlist"
                         onclick={load}
-                    ></ui-icon>
+                    ></ourss-icon>
                 </span>
 
                 <span slot="actions">
                     <p style="color:white;">You have {itemsCount} downloaded</p>
                 </span>
 
-            </ui-img-header>
+            </ourss-img-header>
         </div>
 
         <div class="items">
@@ -29,16 +30,18 @@
             <template for:each={items} for:item="item">
 
                 <template if:true={item.loading}>
-                    <ui-progress
+                    <ourss-progress
+                        lwc:external
                         key={item.id}
                         title={item.title}
                         value={item.loaded}
                         max={item.size}
-                    ></ui-progress>
+                    ></ourss-progress>
                 </template>
 
                 <template if:false={item.loading}>
-                    <ui-list
+                    <ourss-list
+                        lwc:external
                         key={item.id}
                         title={item.title}
                         date={item.date}
@@ -70,7 +73,7 @@
                                 </div>
                             </div>
                         </span>
-                    </ui-list>
+                    </ourss-list>
                 </template>
                 
                 

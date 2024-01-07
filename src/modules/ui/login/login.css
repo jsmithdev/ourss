@@ -1,0 +1,11 @@
+.container {
+    width: 90vw;
+    max-width: 25rem;
+    padding: 1rem;
+    text-align: center;
+}
+.heading {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color:white;
+}

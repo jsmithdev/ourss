@@ -41,6 +41,22 @@ module.exports = (env) => {
 
 		plugins: [
 			new LwcWebpackPlugin(),
+			    // _after_ LwcWebpackPlugin:
+				{
+					apply(compiler) {
+					  compiler.options.module.rules.push({
+						test: /\.ts$/,
+						exclude: /node_modules/,
+						use: {
+						  loader: 'babel-loader',
+						  options: {
+							presets: ['@babel/preset-typescript'],
+							plugins: [['@babel/plugin-syntax-decorators', { legacy: true }]],
+						  }
+						}
+					  })
+					}
+				  },
 			new HtmlWebpackPlugin({ template: './src/index.html' }),
 			new DefinePlugin({
 				__VERSION__: JSON.stringify(version),
@@ -74,6 +90,33 @@ module.exports = (env) => {
 	return config;
 };
 
+/* 
+const paths = [
+    '/modules/ourss/app/app.js',
+];
+
+for(const path of paths) {
+	import(path)
+	.then(mod => {
+		const name = pathToName(path);
+		customElements.define(name, mod.CustomElementConstructor);
+	})
+	.catch(err => {
+		console.error(err);
+	});
+}
+*/
+/**
+ * Takes path of module and returns name of module
+ * @param {string} s string of path
+ * @returns {string} name of module
+ * @example
+ * pathToName('./modules/ourss/app/app.js') // ourss-app
+ 
+export function pathToName(s) {
+    return s.substring(s.indexOf('modules/')+8, s.lastIndexOf('/'))
+        .replace(/\//g, '-');
+}*/
 
 //new BundleAnalyzerPlugin(),
 //new DefinePlugin({

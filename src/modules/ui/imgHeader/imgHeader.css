@@ -37,7 +37,7 @@ div.head {
     display: flex;
     place-items: center;
     border-radius: 5px 5px 0px 0px;
-    justify-content: space-around;
+    justify-content: center;
     width: -webkit-fill-available;
     min-height: 200px;
 }

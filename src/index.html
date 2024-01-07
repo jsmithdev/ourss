@@ -56,6 +56,8 @@
         <meta name="apple-mobile-web-app-title" content="Ourss" />
         <link rel="apple-touch-startup-image" href="./resources/icons/maskable_icon_x192.png" />
 
+        
+        <script type="module" src="./imports.js"></script>
     </head>
 
     <body>
@@ -85,9 +87,13 @@
         <script>
         </script>
 
-        <div id="main"></div>
+        <div id="main">
+            <ourss-app></ourss-app>
+        </div>
     </body>
 
+    
+    <script type="module" src="./index.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTE1WGLJ3Q"></script>
     <script>
         window.dataLayer = window.dataLayer || [];

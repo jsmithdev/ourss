@@ -1,64 +1,80 @@
 <template>
-
     <template if:true={isLoading}>
         <div class="load-container">
-            <ui-loading></ui-loading>
+            <ourss-loading lwc:external></ourss-loading>
         </div>
     </template>
 
     <div class="app">
-
         <main class="swipe-view">
-            <section class="casts">
-                <ui-casts
-                    casts={casts}
-                    onselect={showDetail}
-                ></ui-casts>
-            </section>
-            <template if:true={hasDetails}>
-                <section class="deets"><!-- style="background-color: rgb(5, 250, 208);" -->
-                    <ui-cast
-                        cast={selected}
-                        onqueue={queue}
+            <template if:false={user}>
+                <div class="container-center">
+                    <ourss-login 
+                        lwc:external
+                        onlogin={login}
+                    ></ourss-login>
+                </div>
+            </template>
+
+            <template if:true={user}>
+                <section class="casts">
+                    <ourss-casts
+                        lwc:external
+                        casts={casts}
+                        onselect={showDetail}
+                    ></ourss-casts>
+                </section>
+                <template if:true={hasDetails}>
+                    <section class="deets">
+                        <!-- style="background-color: rgb(5, 250, 208);" -->
+                        <ourss-cast
+                            lwc:external
+                            cast={selected}
+                            onqueue={queue}
+                            onselect={setCurrent}
+                            onrefresh={refresh}
+                            onfavorite={favorite}
+                            ondelete={remove}
+                        ></ourss-cast>
+                    </section>
+                </template>
+                <section class="playlist">
+                    <!-- style="background-color: rgb(5, 250, 208);" -->
+
+                    <ourss-playlist
+                        lwc:external
                         onselect={setCurrent}
-                        onrefresh={refresh}
-                        onfavorite={favorite}
-                        ondelete={remove}
-                    ></ui-cast>
+                        onrefresh={loadPlaylist}
+                        onradio={radio}
+                    ></ourss-playlist>
+                </section>
+                <section>
+                    <ourss-settings
+                        lwc:external
+                        user={user}
+                        onradio={radio}
+                        onlogin={login}
+                        onlogout={logout}
+                        onadd={addCast}
+                    ></ourss-settings>
                 </section>
             </template>
-            <section class="playlist"><!-- style="background-color: rgb(5, 250, 208);" -->
-            
-                <ui-playlist
-                    onselect={setCurrent}
-                    onrefresh={loadPlaylist}
-                    onradio={radio}
-                ></ui-playlist>
-
-                </section>
-            <section>
-                <ui-settings
-                    user={user}
-                    onradio={radio}
-                    onlogin={login}
-                    onlogout={logout}
-                    onadd={addCast}
-                ></ui-settings>
-            </section>
         </main>
 
         <footer>
-            <ui-player
+            <ourss-player
+                lwc:external
                 current={current}
                 onmessage={messenger}
                 onnavigate={navigate}
                 onnext={next}
-            ></ui-player>
+            ></ourss-player>
         </footer>
     </div>
 
-    <ui-auth
+    <ourss-auth
+        lwc:external
         onloggedin={loggedIn}
         onloggedout={loggedOut}
-    ></ui-auth>
+    ></ourss-auth>
 </template>

@@ -29,6 +29,8 @@ import {
     ourssFetch,
 } from '../../data/util';
 
+const Queue = new Map();
+
 export default class App extends LightningElement {
 
     @track casts = []
@@ -36,7 +38,7 @@ export default class App extends LightningElement {
     message = ''
     isLoading = false
     showAuth = false;
-    user = {}
+    user;
     selected = {}
     favorites = []
 
@@ -55,7 +57,7 @@ export default class App extends LightningElement {
         return {
             app: this.template.querySelector('.app'),
             main: this.template.querySelector('main'),
-            playlist: this.template.querySelector('ui-playlist'),
+            playlist: this.template.querySelector('ourss-playlist'),
         }
     }
 
@@ -88,11 +90,12 @@ export default class App extends LightningElement {
                 : this.dom.main.scrollTo(this.dom.main.scrollWidth / 3, 0);
         }
     }
+
     navigate({ detail }) {
 
         const { view, value } = detail;
 
-        console.log('App: v/v ', view, value)
+        console.log('App: Nav to ', value, ' from ', view )
 
         if (value === undefined || value === true) {
             this.view(view)
@@ -175,23 +178,6 @@ export default class App extends LightningElement {
         this.message = detail.message;
     }
 
-    async refresh({ detail }) {
-
-        console.log('App: refresh feed: ', detail)
-
-        const { feed, id, callback } = detail;
-
-        this.worker.postMessage({
-            feed,
-            id,
-            store: true,
-            type: 'parse',
-        });
-
-        this.updateSortCast({feed,id})
-
-        if (callback) callback({feed,id});
-    }
     async favorite({ detail }) {
 
         const { cast } = detail;
@@ -268,13 +254,14 @@ export default class App extends LightningElement {
      * used to run sign in process
      */
     login() {
-        this.template.querySelector('ui-auth').login();
+        console.log('App: login')
+        this.template.querySelector('ourss-auth').login();
     }
     /**
      * used to run sign out process
      */
     logout() {
-        this.template.querySelector('ui-auth').logout();
+        this.template.querySelector('ourss-auth').logout();
     }
 
     /**
@@ -338,15 +325,15 @@ export default class App extends LightningElement {
         const casts = await getItems('casts')//, 'date'
 
         if (!casts.length) {
-            defaults.feeds.map(data => {
+            /* defaults.feeds.map(data => {
                 this.worker.postMessage({
                     data,
                     store: true,
                     type: 'parse',
                 });
-            })
+            }) */
 
-            console.log('App: had to get default casts')
+            console.log('App: needs to login to pull casts')
             // have loaded some defaults
             // on login, we'll check remote db
             return true;
@@ -412,7 +399,7 @@ export default class App extends LightningElement {
      */
     async processed(event) {
 
-        const { data, store, whoami } = event.data;
+        const { data, store, whoami, actionId } = event.data;
 
         console.log('PROCESSED by: ', whoami)
         console.log(event)
@@ -423,7 +410,31 @@ export default class App extends LightningElement {
             if (data) {
                 this.updateSortCast(data)
             }
+            if (actionId) {
+                const callback = Queue.get(actionId);
+                callback(data);
+                Queue.delete(actionId);
+            }
         }
+    }
+
+    async refresh({ detail }) {
+
+        console.log('App: refresh feed: ', detail)
+
+        const { feed, id, callback } = detail;
+
+        const actionId = Math.random().toString(36).substring(2, 15);
+
+        Queue.set(actionId, callback);
+
+        this.worker.postMessage({
+            feed,
+            id,
+            actionId,
+            store: true,
+            type: 'parse',
+        });
     }
 
     updateSortCast(cast) {

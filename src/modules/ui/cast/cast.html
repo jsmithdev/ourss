@@ -2,15 +2,16 @@
     <div class="container">
         <div class="dynamic-width">
 
-            <ui-img-header>
+            <ourss-img-header lwc:external>
                 
                 <span slot="image">
                     <template if:true={isLoading}>
                         <div class="load-container">
-                            <ui-loading
+                            <ourss-loading
+                                lwc:external
                                 width="10rem"
                                 height="10rem"
-                            ></ui-loading>
+                            ></ourss-loading>
                         </div>
                     </template>
                     <template if:false={isLoading}>
@@ -41,13 +42,14 @@
                     </template>
                 </span>
 
-            </ui-img-header>
+            </ourss-img-header>
         </div>
             
         <div class="items">
             <template for:each={items} for:item="item">
                 
-                <ui-list
+                <ourss-list
+                    lwc:external
                     key={item.id}
                     title={item.title}
                     date={item.date}
@@ -80,7 +82,7 @@
                             </div>
                         </div>
                     </span>
-                </ui-list>
+                </ourss-list>
             </template>
         </div>
 

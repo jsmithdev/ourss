@@ -3,5 +3,8 @@
         {
             "dir": "src/modules"
         }
+    ],
+
+    "expose": [
     ]
 }

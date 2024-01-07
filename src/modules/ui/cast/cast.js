@@ -20,6 +20,7 @@ export default class Cast extends LightningElement {
         return this.current;
     }
     set cast(c) {
+        console.log('Cast: set cast ', c)
         this.current = c;
         this.itemIndex = 1;
         this.groups = [...chunk(c.items, CHUNK_SIZE)];
@@ -77,19 +78,21 @@ export default class Cast extends LightningElement {
         event.cancelBubble = true;
         this.isLoading = true;
 
-        /* const callback = c => {
-            this.cast = c;
-            this.isLoading = false
-        } */
-        setTimeout(() => this.isLoading = false, 1000)
+        this.temp = Math.random();
+        //setTimeout(() => this.isLoading = false, 1000)
+
+        const callback = (data) => {
+            this.isLoading = false;
+            this.cast = data;
+        }
 
         this.dispatchEvent(new CustomEvent('refresh', {
             bubbles: true,
             composed: true,
             detail: {
+                callback,
                 id: this.cast.id,
                 feed: this.cast.feed,
-                callback,
             },
         }));
     }

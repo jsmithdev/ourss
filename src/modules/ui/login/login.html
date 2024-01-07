@@ -1,0 +1,27 @@
+<template>
+        <ourss-img-header lwc:external>
+                    
+            <span slot="image">
+                <ourss-icon
+                    lwc:external
+                    text="Login"
+                    onclick={load}
+                ></ourss-icon>
+            </span>
+
+            <span slot="content">
+                <div class="container">
+                    <div class="heading">
+                        {text}
+                    </div>
+                    <ourss-button
+                        lwc:external
+                        label="Login"
+                        onclick={login}
+                    ></ourss-button>
+                </div>
+            </span>
+
+        </ourss-img-header>
+
+</template>
