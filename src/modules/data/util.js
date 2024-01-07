@@ -17,8 +17,6 @@ export const HOUR = 3600000;//60*60*1000
 
 export const baseProxyUri = baseProxyName+'.'+baseProxyLoc+'?url=';
 
-console.log(baseProxyUri)
-
 export function hasBeenHour(time){
     const now = new Date().getTime();
     const diff = now - time;
@@ -69,55 +67,8 @@ export function* chunk(arr, n) {
     }
 }
 
-export async function storeCast(cast) {
-
-    if(!cast) return console.warn('storeCast: no cast provided')
-    if(!cast.imageData && cast.image){
-        const res = await ourssFetch(cast.image, 'image')
-        if(!res?.ok) {
-            return console.warn('storeCast: image fetch failed', res)
-        }
-        cast.imageData = await res.blob();
-    }
-    
-    setItem('casts', cast);
-
-    return cast;
-}
-
-export async function addCast(data){
-    const {url, id} = data;
-    const cast = await parseUrl(url, id)
-    // todo add to mongo
-    return storeCast(cast)
-}
-
-export async function updateCast(data){
-
-    console.log('App: update feed: ', data)
-
-    this.worker.postMessage({
-        feed,
-        store: true,
-        type: 'parse',
-    });
-}
-
 export async function deleteCast(id){
     return deleteItemById('casts', id)
-}
-
-export async function fireCasts(){
-
-    console.log('MODULES/DATA/UTIL: fireCasts CALLED')
-    /* const dbCasts = await initCasts('casts')
-    console.log('util: dbCasts')
-    console.log(dbCasts)
-    
-    return Promise.all(
-        dbCasts.map(async c => 
-            storeCast( structure( (await parseUrl(c.feed, c.id) ))))
-    ); */
 }
 
 export function guid() {
@@ -170,6 +121,10 @@ export async function ourssFetch(url, type) {
                 const res = await getAudioByProxy(url)
                 return res;
             }
+            const res = await getAudioByProxy(url)
+            console.log('ourssFetch: Proxy response')
+            console.log(res)
+            return res;
         } catch (error) {
             console.info('Fallback failed. Can\'t parse the url ', url)
             console.warn(error)
@@ -203,3 +158,23 @@ export function getBlobUrl(blob){
     setTimeout(() => Url.revokeObjectURL(url), 1000);
     return url;
 }
+
+/* 
+todo decide to download images for potential offline use
+
+export async function storeCast(cast) {
+
+    if(!cast) return console.warn('storeCast: no cast provided')
+    if(!cast.imageData && cast.image){
+        const res = await ourssFetch(cast.image, 'image')
+        if(!res?.ok) {
+            return console.warn('storeCast: image fetch failed', res)
+        }
+        cast.imageData = await res.blob();
+    }
+    
+    setItem('casts', cast);
+
+    return cast;
+}
+ */

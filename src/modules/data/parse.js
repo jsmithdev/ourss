@@ -3,8 +3,7 @@ import {XMLParser} from 'fast-xml-parser';
 
 import {
     guid,
-    getBlobUrl,
-    baseProxyUri,
+    ourssFetch,
 } from './util';
 
 /**
@@ -13,7 +12,7 @@ import {
  * @param {String} id of feed; Optional, if not provided, will be generated
  * @returns {Object} structured object else undefined
  */
-export async function parseUrl(data) {
+export function parseUrl(data) {
 
     console.log('Parser: ', data)
 
@@ -21,32 +20,15 @@ export async function parseUrl(data) {
     const url = data.url ? data.url : data.feed;
 
     try {
-        console.log('Parser: Fetching feed ', url)
-        return parse(await (await fetch(url)).text(), url, id);
+        return ourssFetch(url, 'audio')
+            .then(res => res.text())
+            .then(rss => parse(rss, url, id))
     } catch (error) {
-        console.warn(error)
-        console.log('Parser: Feed failed, trying again...')
-        try {
-            return parse(await proxy(url), url, id);
-        } catch (er) {
-            console.warn(er)
-            console.info('Fallback failed. Can\'t parse the url ', url)
-        }
+        console.error(error)
+        console.log('Parser: Feed could not be fetched or parsed')
     }
     
     return undefined;
-}
-
-/**
- * fallback function to parse feed via a proxy
- * @param {String} url of feed
- * @returns Promise resolves rss/xml text from feed
- */
-async function proxy(url) {
-
-    const response = await fetch(baseProxyUri+encodeURIComponent(url));
-
-    return response.text();
 }
 
 /**

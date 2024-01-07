@@ -1,7 +1,6 @@
 import { track, LightningElement } from 'lwc';
 
 import {
-    addCast,
     updateCast,
     deleteCast,
     getBlobUrl,
@@ -20,14 +19,6 @@ import {
     getRemoteDb,
     //setRemoteDb,
 } from '../../data/mongo';
-
-import {
-    gestureListeners,
-} from '../../data/gesture';
-
-import {
-    ourssFetch,
-} from '../../data/util';
 
 const Queue = new Map();
 
@@ -70,7 +61,6 @@ export default class App extends LightningElement {
         if (!this._init) {
             this._init = true;
             this.onkeyup = this.hotkeys;
-            //gestureListeners.bind(this).call();
         }
     }
 
@@ -95,7 +85,7 @@ export default class App extends LightningElement {
 
         const { view, value } = detail;
 
-        console.log('App: Nav to ', value, ' from ', view )
+        console.log('App: Nav to ', view, value )
 
         if (value === undefined || value === true) {
             this.view(view)
@@ -129,21 +119,6 @@ export default class App extends LightningElement {
         //console.log(this.current)
     }
 
-    async addCast({ detail }) {
-        const { data } = detail;
-        const { feed } = data;
-        
-        console.log('App: add feed: ', data)
-
-        this.worker.postMessage({
-            feed,
-            store: true,
-            type: 'parse',
-        });
-        //console.log({
-        //    CastsNow: this.casts,
-        //})
-    }
 
     hotkeys(event) {
         //console.log('hotkeys ', event.key)
@@ -437,6 +412,26 @@ export default class App extends LightningElement {
         });
     }
 
+    async addCast({ detail }) {
+
+        const { data } = detail;
+        const { feed } = data;
+        
+        const actionId = Math.random().toString(36).substring(2, 15);
+
+        Queue.set(actionId, callback);
+
+        this.worker.postMessage({
+            feed,
+            actionId,
+            store: true,
+            type: 'parse',
+        });
+        //console.log({
+        //    CastsNow: this.casts,
+        //})
+    }
+
     updateSortCast(cast) {
         if (!cast) return;
 
@@ -478,26 +473,6 @@ export default class App extends LightningElement {
         ];
     }
 
-    loadImageData(casts) {
-
-        // get casts w/ image url but no image data
-        const castsNoImage = casts.filter(c => !c.imageData && image)
-        
-        // get image data for each cast
-        castsNoImage.map(async cast => {
-            const { image } = cast;
-            const imageData = await getImageData(image);
-            cast.imageData = imageData
-        })
-    }
-
-    async getImageData (url, path) {
-        const res = await ourssFetch(url, 'image');
-        const blob = await res.blob();
-        //todo
-    }
-
-
     queue({ detail }) {
 
         const {
@@ -514,3 +489,22 @@ export default class App extends LightningElement {
         this.dom.playlist.queue(item)
     }
 }
+/* 
+todo decide to download image for potential offline use
+loadImageData(casts) {
+
+    // get casts w/ image url but no image data
+    const castsNoImage = casts.filter(c => !c.imageData && image)
+    
+    // get image data for each cast
+    castsNoImage.map(async cast => {
+        const { image } = cast;
+        const imageData = await getImageData(image);
+        cast.imageData = imageData
+    })
+}
+async getImageData (url, path) {
+    const res = await ourssFetch(url, 'image');
+    return res.blob();
+}
+    */
